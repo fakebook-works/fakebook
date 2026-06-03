@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Aspire.Npgsql.EntityFrameworkCore.PostgreSQL</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.Hosting.AspireEFPostgreSqlExtensions">
+            <summary>
+            Provides extension methods for registering a PostgreSQL database context in an Aspire application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Hosting.AspireEFPostgreSqlExtensions.AddNpgsqlDbContext``1(Microsoft.Extensions.Hosting.IHostApplicationBuilder,System.String,System.Action{Aspire.Npgsql.EntityFrameworkCore.PostgreSQL.NpgsqlEntityFrameworkCorePostgreSQLSettings},System.Action{Microsoft.EntityFrameworkCore.DbContextOptionsBuilder})">
+            <summary>
+            Registers the given <see cref="T:Microsoft.EntityFrameworkCore.DbContext" /> as a service in the services provided by the <paramref name="builder"/>.
+            Enables db context pooling, retries, corresponding health check, logging and telemetry.
+            </summary>
+            <typeparam name="TContext">The <see cref="T:Microsoft.EntityFrameworkCore.DbContext" /> that needs to be registered.</typeparam>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Hosting.IHostApplicationBuilder" /> to read config from and add services to.</param>
+            <param name="connectionName">A name used to retrieve the connection string from the ConnectionStrings configuration section.</param>
+            <param name="configureSettings">An optional delegate that can be used for customizing options. It's invoked after the settings are read from the configuration.</param>
+            <param name="configureDbContextOptions">An optional delegate to configure the <see cref="T:Microsoft.EntityFrameworkCore.DbContextOptions"/> for the context.</param>
+            <remarks>
+            <para>
+            Reads the configuration from "Aspire:Npgsql:EntityFrameworkCore:PostgreSQL:{typeof(TContext).Name}" config section, or "Aspire:Npgsql:EntityFrameworkCore:PostgreSQL" if former does not exist.
+            </para>
+            <para>
+            The <see cref="M:Microsoft.EntityFrameworkCore.DbContext.OnConfiguring(Microsoft.EntityFrameworkCore.DbContextOptionsBuilder)" /> method can then be overridden to configure <see cref="T:Microsoft.EntityFrameworkCore.DbContext" /> options.
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">Thrown if mandatory <paramref name="builder"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when mandatory <see cref="P:Aspire.Npgsql.EntityFrameworkCore.PostgreSQL.NpgsqlEntityFrameworkCorePostgreSQLSettings.ConnectionString"/> is not provided.</exception>
+        </member>
+        <member name="M:Microsoft.Extensions.Hosting.AspireEFPostgreSqlExtensions.EnrichNpgsqlDbContext``1(Microsoft.Extensions.Hosting.IHostApplicationBuilder,System.Action{Aspire.Npgsql.EntityFrameworkCore.PostgreSQL.NpgsqlEntityFrameworkCorePostgreSQLSettings})">
+            <summary>
+            Configures retries, health check, logging and telemetry for the <see cref="T:Microsoft.EntityFrameworkCore.DbContext" />.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if mandatory <paramref name="builder"/> is null.</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when mandatory <see cref="T:Microsoft.EntityFrameworkCore.DbContext"/> is not registered in DI.</exception>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Binder.SourceGeneration.BindingExtensions.Bind_NpgsqlEntityFrameworkCorePostgreSQLSettings(Microsoft.Extensions.Configuration.IConfiguration,System.Object)">
+            <summary>Attempts to bind the given object instance to configuration values by matching property names against configuration keys recursively.</summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Binder.SourceGeneration.BindingExtensions.TryGetConfigurationValue(Microsoft.Extensions.Configuration.IConfiguration,System.String,System.String@)">
+            <summary>Tries to get the configuration value for the specified key.</summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Binder.SourceGeneration.BindingExtensions.ValidateConfigurationKeys(System.Type,System.Lazy{System.Collections.Generic.HashSet{System.String}},Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Configuration.BinderOptions)">
+            <summary>If required by the binder options, validates that there are no unknown keys in the input configuration object.</summary>
+        </member>
+        <member name="T:Aspire.Npgsql.EntityFrameworkCore.PostgreSQL.NpgsqlEntityFrameworkCorePostgreSQLSettings">
+            <summary>
+            Provides the client configuration settings for connecting to a PostgreSQL database using EntityFrameworkCore.
+            </summary>
+        </member>
+        <member name="P:Aspire.Npgsql.EntityFrameworkCore.PostgreSQL.NpgsqlEntityFrameworkCorePostgreSQLSettings.ConnectionString">
+            <summary>
+            Gets or sets the connection string of the PostgreSQL database to connect to.
+            </summary>
+        </member>
+        <member name="P:Aspire.Npgsql.EntityFrameworkCore.PostgreSQL.NpgsqlEntityFrameworkCorePostgreSQLSettings.DisableRetry">
+            <summary>
+            Gets or sets whether retries should be disabled.
+            </summary>
+            <value>
+            The default value is <see langword="false"/>.
+            </value>
+        </member>
+        <member name="P:Aspire.Npgsql.EntityFrameworkCore.PostgreSQL.NpgsqlEntityFrameworkCorePostgreSQLSettings.DisableHealthChecks">
+            <summary>
+            Gets or sets a boolean value that indicates whether the database health check is disabled or not.
+            </summary>
+            <value>
+            The default value is <see langword="false"/>.
+            </value>
+        </member>
+        <member name="P:Aspire.Npgsql.EntityFrameworkCore.PostgreSQL.NpgsqlEntityFrameworkCorePostgreSQLSettings.DisableTracing">
+            <summary>
+            Gets or sets a boolean value that indicates whether the OpenTelemetry tracing is disabled or not.
+            </summary>
+            <value>
+            The default value is <see langword="false"/>.
+            </value>
+        </member>
+        <member name="P:Aspire.Npgsql.EntityFrameworkCore.PostgreSQL.NpgsqlEntityFrameworkCorePostgreSQLSettings.DisableMetrics">
+            <summary>
+            Gets or sets a boolean value that indicates whether the OpenTelemetry metrics are disabled or not.
+            </summary>
+            <value>
+            The default value is <see langword="false"/>.
+            </value>
+        </member>
+        <member name="P:Aspire.Npgsql.EntityFrameworkCore.PostgreSQL.NpgsqlEntityFrameworkCorePostgreSQLSettings.CommandTimeout">
+            <summary>
+            Gets or sets the time in seconds to wait for the command to execute.
+            </summary>
+        </member>
+        <member name="T:Aspire.ConfigurationSchemaAttribute">
+            <summary>
+            Attribute used to automatically generate a JSON schema for a component's configuration.
+            </summary>
+        </member>
+        <member name="P:Aspire.ConfigurationSchemaAttribute.Path">
+            <summary>
+            The path corresponding to which config section <see cref="P:Aspire.ConfigurationSchemaAttribute.Type"/> binds to.
+            </summary>
+        </member>
+        <member name="P:Aspire.ConfigurationSchemaAttribute.Type">
+            <summary>
+            The type that is bound to the configuration. This type will be walked and generate a JSON schema for all the properties.
+            </summary>
+        </member>
+        <member name="P:Aspire.ConfigurationSchemaAttribute.ExclusionPaths">
+            <summary>
+            (optional) The config sections to exclude from the ConfigurationSchema. This is useful if there are properties you don't want to publicize in the config schema.
+            </summary>
+        </member>
+        <member name="T:Aspire.LoggingCategoriesAttribute">
+            <summary>
+            Provides information to describe the logging categories produced by a component.
+            </summary>
+        </member>
+        <member name="P:Aspire.LoggingCategoriesAttribute.Categories">
+            <summary>
+            The list of log categories produced by the component. These categories will show up under the Logging:LogLevel section in appsettings.json.
+            </summary>
+        </member>
+        <member name="M:Aspire.HealthChecksExtensions.TryAddHealthCheck(Microsoft.Extensions.Hosting.IHostApplicationBuilder,Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckRegistration)">
+            <summary>
+            Adds a HealthCheckRegistration if one hasn't already been added to the builder.
+            </summary>
+        </member>
+        <member name="M:Aspire.HealthChecksExtensions.TryAddHealthCheck(Microsoft.Extensions.Hosting.IHostApplicationBuilder,System.String,System.Action{Microsoft.Extensions.DependencyInjection.IHealthChecksBuilder})">
+            <summary>
+            Invokes the <paramref name="addHealthCheck"/> action if the given <paramref name="name"/> hasn't already been added to the builder.
+            </summary>
+        </member>
+        <member name="M:Aspire.EntityFrameworkUtils.GetDbContextSettings``2(Microsoft.Extensions.Hosting.IHostApplicationBuilder,System.String,System.String,System.Action{``1,Microsoft.Extensions.Configuration.IConfiguration})">
+            <summary>
+            Binds the DbContext specific configuration section to settings when available.
+            </summary>
+        </member>
+        <member name="M:Aspire.EntityFrameworkUtils.CheckDbContextRegistered``1(Microsoft.Extensions.Hosting.IHostApplicationBuilder,System.String)">
+            <summary>
+            Ensures a <see cref="T:Microsoft.EntityFrameworkCore.DbContext"/> is registered in DI.
+            </summary>
+        </member>
+        <member name="M:Aspire.EntityFrameworkUtils.PatchServiceDescriptor``1(Microsoft.Extensions.Hosting.IHostApplicationBuilder,System.Action{Microsoft.EntityFrameworkCore.DbContextOptionsBuilder{``0}},System.String)">
+            <summary>
+            Enriches the DbContext options service descriptor with custom alterations.
+            </summary>
+        </member>
+    </members>
+</doc>

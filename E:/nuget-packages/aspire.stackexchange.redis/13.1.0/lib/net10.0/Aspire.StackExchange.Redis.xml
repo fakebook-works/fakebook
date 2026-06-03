@@ -1,0 +1,458 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Aspire.StackExchange.Redis</name>
+    </assembly>
+    <members>
+        <member name="T:Aspire.StackExchange.Redis.AspireRedisClientBuilder">
+            <summary>
+            Provides a builder for configuring Redis client services using StackExchange.Redis in an Aspire application.
+            </summary>
+            <param name="hostBuilder">The <see cref="T:Microsoft.Extensions.Hosting.IHostApplicationBuilder"/> with which services are being registered.</param>
+            <param name="settings">The <see cref="T:Aspire.StackExchange.Redis.StackExchangeRedisSettings"/> to configure the Redis client.</param>
+            <param name="serviceKey">The service key used to register the <see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> service, if any.</param>
+        </member>
+        <member name="M:Aspire.StackExchange.Redis.AspireRedisClientBuilder.#ctor(Microsoft.Extensions.Hosting.IHostApplicationBuilder,Aspire.StackExchange.Redis.StackExchangeRedisSettings,System.String)">
+            <summary>
+            Provides a builder for configuring Redis client services using StackExchange.Redis in an Aspire application.
+            </summary>
+            <param name="hostBuilder">The <see cref="T:Microsoft.Extensions.Hosting.IHostApplicationBuilder"/> with which services are being registered.</param>
+            <param name="settings">The <see cref="T:Aspire.StackExchange.Redis.StackExchangeRedisSettings"/> to configure the Redis client.</param>
+            <param name="serviceKey">The service key used to register the <see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> service, if any.</param>
+        </member>
+        <member name="P:Aspire.StackExchange.Redis.AspireRedisClientBuilder.HostBuilder">
+            <summary>
+            Gets the <see cref="T:Microsoft.Extensions.Hosting.IHostApplicationBuilder"/> with which services are being registered.
+            </summary>
+        </member>
+        <member name="P:Aspire.StackExchange.Redis.AspireRedisClientBuilder.Settings">
+            <summary>
+            Gets the <see cref="T:Aspire.StackExchange.Redis.StackExchangeRedisSettings"/> used to configure the Redis client.
+            </summary>
+        </member>
+        <member name="P:Aspire.StackExchange.Redis.AspireRedisClientBuilder.ServiceKey">
+            <summary>
+            Gets the service key used to register the <see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> service, if any.
+            </summary>
+        </member>
+        <member name="T:Aspire.StackExchange.Redis.StackExchangeRedisSettings">
+            <summary>
+            Provides the client configuration settings for connecting to a Redis server.
+            </summary>
+        </member>
+        <member name="P:Aspire.StackExchange.Redis.StackExchangeRedisSettings.ConnectionString">
+            <summary>
+            Gets or sets the comma-delimited configuration string used to connect to the Redis server.
+            </summary>
+        </member>
+        <member name="P:Aspire.StackExchange.Redis.StackExchangeRedisSettings.DisableHealthChecks">
+            <summary>
+            Gets or sets a boolean value that indicates whether the Redis health check is disabled or not.
+            </summary>
+            <value>
+            The default value is <see langword="false"/>.
+            </value>
+        </member>
+        <member name="P:Aspire.StackExchange.Redis.StackExchangeRedisSettings.DisableTracing">
+            <summary>
+            Gets or sets a boolean value that indicates whether the OpenTelemetry tracing is disabled or not.
+            </summary>
+            <value>
+            The default value is <see langword="false"/>.
+            </value>
+        </member>
+        <member name="P:Aspire.StackExchange.Redis.StackExchangeRedisSettings.DisableAutoActivation">
+            <summary>
+            Gets or sets a boolean value that indicates whether auto activation is disabled or not.
+            </summary>
+            <remarks>
+            When auto activation is enabled, the Redis connection is established at startup time rather than on first use,
+            which prevents blocking threads when the connection is first requested from the DI container.
+            </remarks>
+            <value>
+            The default value is <see langword="true"/>.
+            </value>
+        </member>
+        <member name="M:Aspire.HealthChecksExtensions.TryAddHealthCheck(Microsoft.Extensions.Hosting.IHostApplicationBuilder,Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckRegistration)">
+            <summary>
+            Adds a HealthCheckRegistration if one hasn't already been added to the builder.
+            </summary>
+        </member>
+        <member name="M:Aspire.HealthChecksExtensions.TryAddHealthCheck(Microsoft.Extensions.Hosting.IHostApplicationBuilder,System.String,System.Action{Microsoft.Extensions.DependencyInjection.IHealthChecksBuilder})">
+            <summary>
+            Invokes the <paramref name="addHealthCheck"/> action if the given <paramref name="name"/> hasn't already been added to the builder.
+            </summary>
+        </member>
+        <member name="T:Aspire.ConfigurationSchemaAttribute">
+            <summary>
+            Attribute used to automatically generate a JSON schema for a component's configuration.
+            </summary>
+        </member>
+        <member name="P:Aspire.ConfigurationSchemaAttribute.Path">
+            <summary>
+            The path corresponding to which config section <see cref="P:Aspire.ConfigurationSchemaAttribute.Type"/> binds to.
+            </summary>
+        </member>
+        <member name="P:Aspire.ConfigurationSchemaAttribute.Type">
+            <summary>
+            The type that is bound to the configuration. This type will be walked and generate a JSON schema for all the properties.
+            </summary>
+        </member>
+        <member name="P:Aspire.ConfigurationSchemaAttribute.ExclusionPaths">
+            <summary>
+            (optional) The config sections to exclude from the ConfigurationSchema. This is useful if there are properties you don't want to publicize in the config schema.
+            </summary>
+        </member>
+        <member name="T:Aspire.LoggingCategoriesAttribute">
+            <summary>
+            Provides information to describe the logging categories produced by a component.
+            </summary>
+        </member>
+        <member name="P:Aspire.LoggingCategoriesAttribute.Categories">
+            <summary>
+            The list of log categories produced by the component. These categories will show up under the Logging:LogLevel section in appsettings.json.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Hosting.AspireRedisExtensions">
+            <summary>
+            Provides extension methods for registering Redis-related services in an <see cref="T:Microsoft.Extensions.Hosting.IHostApplicationBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Hosting.AspireRedisExtensions.AddRedisClient(Microsoft.Extensions.Hosting.IHostApplicationBuilder,System.String,System.Action{Aspire.StackExchange.Redis.StackExchangeRedisSettings},System.Action{StackExchange.Redis.ConfigurationOptions})">
+            <summary>
+            Registers <see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> as a singleton in the services provided by the <paramref name="builder"/>.
+            Enables retries, corresponding health check, logging, and telemetry.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Hosting.IHostApplicationBuilder" /> to read config from and add services to.</param>
+            <param name="connectionName">A name used to retrieve the connection string from the ConnectionStrings configuration section.</param>
+            <param name="configureSettings">An optional method that can be used for customizing the <see cref="T:Aspire.StackExchange.Redis.StackExchangeRedisSettings"/>. It's invoked after the settings are read from the configuration.</param>
+            <param name="configureOptions">An optional method that can be used for customizing the <see cref="T:StackExchange.Redis.ConfigurationOptions"/>. It's invoked after the options are read from the configuration.</param>
+            <remarks>Reads the configuration from "Aspire:StackExchange:Redis" section.</remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Hosting.AspireRedisExtensions.AddRedisClientBuilder(Microsoft.Extensions.Hosting.IHostApplicationBuilder,System.String,System.Action{Aspire.StackExchange.Redis.StackExchangeRedisSettings},System.Action{StackExchange.Redis.ConfigurationOptions})">
+            <summary>
+            Registers <see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> as a singleton in the services provided by the <paramref name="builder"/>.
+            Enables retries, corresponding health check, logging, and telemetry.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Hosting.IHostApplicationBuilder" /> to read config from and add services to.</param>
+            <param name="connectionName">A name used to retrieve the connection string from the ConnectionStrings configuration section.</param>
+            <param name="configureSettings">An optional method that can be used for customizing the <see cref="T:Aspire.StackExchange.Redis.StackExchangeRedisSettings"/>. It's invoked after the settings are read from the configuration.</param>
+            <param name="configureOptions">An optional method that can be used for customizing the <see cref="T:StackExchange.Redis.ConfigurationOptions"/>. It's invoked after the options are read from the configuration.</param>
+            <remarks>Reads the configuration from "Aspire:StackExchange:Redis" section.</remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Hosting.AspireRedisExtensions.AddKeyedRedisClient(Microsoft.Extensions.Hosting.IHostApplicationBuilder,System.String,System.Action{Aspire.StackExchange.Redis.StackExchangeRedisSettings},System.Action{StackExchange.Redis.ConfigurationOptions})">
+            <summary>
+            Registers <see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> as a keyed singleton for the given <paramref name="name"/> in the services provided by the <paramref name="builder"/>.
+            Enables retries, corresponding health check, logging, and telemetry.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Hosting.IHostApplicationBuilder" /> to read config from and add services to.</param>
+            <param name="name">The name of the component, which is used as the <see cref="P:Microsoft.Extensions.DependencyInjection.ServiceDescriptor.ServiceKey"/> of the service and also to retrieve the connection string from the ConnectionStrings configuration section.</param>
+            <param name="configureSettings">An optional method that can be used for customizing the <see cref="T:Aspire.StackExchange.Redis.StackExchangeRedisSettings"/>. It's invoked after the settings are read from the configuration.</param>
+            <param name="configureOptions">An optional method that can be used for customizing the <see cref="T:StackExchange.Redis.ConfigurationOptions"/>. It's invoked after the options are read from the configuration.</param>
+            <remarks>Reads the configuration from "Aspire:StackExchange:Redis:{name}" section.</remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Hosting.AspireRedisExtensions.AddKeyedRedisClientBuilder(Microsoft.Extensions.Hosting.IHostApplicationBuilder,System.String,System.Action{Aspire.StackExchange.Redis.StackExchangeRedisSettings},System.Action{StackExchange.Redis.ConfigurationOptions})">
+            <summary>
+            Registers <see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> as a keyed singleton for the given <paramref name="name"/> in the services provided by the <paramref name="builder"/>.
+            Enables retries, corresponding health check, logging, and telemetry.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Hosting.IHostApplicationBuilder" /> to read config from and add services to.</param>
+            <param name="name">The name of the component, which is used as the <see cref="P:Microsoft.Extensions.DependencyInjection.ServiceDescriptor.ServiceKey"/> of the service and also to retrieve the connection string from the ConnectionStrings configuration section.</param>
+            <param name="configureSettings">An optional method that can be used for customizing the <see cref="T:Aspire.StackExchange.Redis.StackExchangeRedisSettings"/>. It's invoked after the settings are read from the configuration.</param>
+            <param name="configureOptions">An optional method that can be used for customizing the <see cref="T:StackExchange.Redis.ConfigurationOptions"/>. It's invoked after the options are read from the configuration.</param>
+            <remarks>Reads the configuration from "Aspire:StackExchange:Redis:{name}" section.</remarks>
+        </member>
+        <member name="T:Microsoft.Extensions.Hosting.AspireRedisExtensions.RedisSettingsAdapterService">
+            <summary>
+            Used to pass StackExchangeRedisSettings instances to the ConfigurationOptionsFactory.
+            </summary>
+            <remarks>Not using StackExchangeRedisSettings itself because it is a public type that someone else could register in DI.</remarks>
+        </member>
+        <member name="T:Microsoft.Extensions.Hosting.AspireRedisExtensions.ConfigurationOptionsFactory">
+             <summary>
+             ConfigurationOptionsFactory parses a ConfigurationOptions options object from Configuration.
+             </summary>
+             <remarks>
+             Using an OptionsFactory to create the object allows parsing the ConfigurationOptions IOptions object from a connection string.
+             ConfigurationOptions.Parse(string) returns the ConfigurationOptions and doesn't support parsing to an existing object.
+             Using a normal Configure callback isn't feasible since that only works with an existing object. Using an OptionsFactory
+             allows us to create the initial object ourselves.
+            
+             This still allows for others to Configure/PostConfigure/Validate the ConfigurationOptions since it just overrides <see cref="M:Microsoft.Extensions.Hosting.AspireRedisExtensions.ConfigurationOptionsFactory.CreateInstance(System.String)"/>.
+             </remarks>
+        </member>
+        <member name="T:Microsoft.Extensions.Hosting.AspireRedisExtensions.AspireDefaultOptionsProvider">
+            <summary>
+            A Redis DefaultOptionsProvider for Aspire specific defaults.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Binder.SourceGeneration.BindingExtensions.Bind_StackExchangeRedisSettings(Microsoft.Extensions.Configuration.IConfiguration,System.Object)">
+            <summary>Attempts to bind the given object instance to configuration values by matching property names against configuration keys recursively.</summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Binder.SourceGeneration.BindingExtensions.Bind_ConfigurationOptions(Microsoft.Extensions.Configuration.IConfiguration,System.Object)">
+            <summary>Attempts to bind the given object instance to configuration values by matching property names against configuration keys recursively.</summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Binder.SourceGeneration.BindingExtensions.TryGetConfigurationValue(Microsoft.Extensions.Configuration.IConfiguration,System.String,System.String@)">
+            <summary>Tries to get the configuration value for the specified key.</summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Binder.SourceGeneration.BindingExtensions.ValidateConfigurationKeys(System.Type,System.Lazy{System.Collections.Generic.HashSet{System.String}},Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Configuration.BinderOptions)">
+            <summary>If required by the binder options, validates that there are no unknown keys in the input configuration object.</summary>
+        </member>
+        <member name="M:OpenTelemetry.Instrumentation.StackExchangeRedis.Implementation.RedisProfilerEntryToActivityConverter.CreateFieldGetter``1(System.Type,System.String,System.Reflection.BindingFlags)">
+            <summary>
+            Creates getter for a field defined in private or internal type
+            represented with classType variable.
+            </summary>
+        </member>
+        <member name="T:OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisConnectionInstrumentation">
+            <summary>
+            StackExchange.Redis <see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> instrumentation.
+            </summary>
+        </member>
+        <member name="M:OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisConnectionInstrumentation.#ctor(StackExchange.Redis.IConnectionMultiplexer,System.String,OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisInstrumentationOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisConnectionInstrumentation"/> class.
+            </summary>
+            <param name="connection"><see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> to instrument.</param>
+            <param name="name">Optional name for the connection.</param>
+            <param name="options">Configuration options for redis instrumentation.</param>
+        </member>
+        <member name="M:OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisConnectionInstrumentation.GetProfilerSessionsFactory">
+            <summary>
+            Returns session for the Redis calls recording.
+            </summary>
+            <returns>Session associated with the current span context to record Redis calls.</returns>
+        </member>
+        <member name="M:OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisConnectionInstrumentation.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisInstrumentation">
+            <summary>
+            StackExchange.Redis instrumentation.
+            </summary>
+        </member>
+        <member name="M:OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisInstrumentation.AddConnection(StackExchange.Redis.IConnectionMultiplexer)">
+            <summary>
+            Adds an <see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> to the instrumentation.
+            </summary>
+            <param name="connection"><see cref="T:StackExchange.Redis.IConnectionMultiplexer"/>.</param>
+            <returns><see cref="T:System.IDisposable"/> to cancel the registration.</returns>
+        </member>
+        <member name="M:OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisInstrumentation.AddConnection(System.String,StackExchange.Redis.IConnectionMultiplexer)">
+            <summary>
+            Adds an <see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> to the instrumentation.
+            </summary>
+            <param name="name">Name to use when retrieving options.</param>
+            <param name="connection"><see cref="T:StackExchange.Redis.IConnectionMultiplexer"/>.</param>
+            <returns><see cref="T:System.IDisposable"/> to cancel the registration.</returns>
+        </member>
+        <member name="M:OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisInstrumentation.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisInstrumentationOptions">
+            <summary>
+            Options for StackExchange.Redis instrumentation.
+            </summary>
+        </member>
+        <member name="P:OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisInstrumentationOptions.FlushInterval">
+            <summary>
+            Gets or sets the maximum time that should elapse between flushing the internal buffer of Redis profiling sessions and creating <see cref="T:System.Diagnostics.Activity"/> objects. Default value: 00:00:10.
+            </summary>
+        </member>
+        <member name="P:OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisInstrumentationOptions.SetVerboseDatabaseStatements">
+            <summary>
+            Gets or sets a value indicating whether or not the <see cref="T:OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisConnectionInstrumentation"/> should use reflection to get more detailed <see cref="F:OpenTelemetry.Trace.SemanticConventions.AttributeDbStatement"/> tag values. Default value: False.
+            </summary>
+        </member>
+        <member name="P:OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisInstrumentationOptions.Enrich">
+            <summary>
+            Gets or sets an action to enrich an Activity.
+            </summary>
+            <remarks>
+            <para><see cref="T:System.Diagnostics.Activity"/>: the activity being enriched.</para>
+            <para><see cref="T:StackExchange.Redis.Profiling.IProfiledCommand"/>: the profiled redis command from which additional information can be extracted to enrich the activity.</para>
+            </remarks>
+        </member>
+        <member name="P:OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisInstrumentationOptions.EnrichActivityWithTimingEvents">
+            <summary>
+            Gets or sets a value indicating whether or not the <see cref="T:OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisConnectionInstrumentation"/> should enrich Activity with <see cref="T:System.Diagnostics.ActivityEvent"/> entries about the Redis command processing/lifetime. Defaults to <see cref="T:System.Boolean">true</see>.
+            </summary>
+        </member>
+        <member name="T:OpenTelemetry.Instrumentation.PropertyFetcher`1">
+            <summary>
+            PropertyFetcher fetches a property from an object.
+            </summary>
+            <typeparam name="T">The type of the property being fetched.</typeparam>
+        </member>
+        <member name="M:OpenTelemetry.Instrumentation.PropertyFetcher`1.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:OpenTelemetry.Instrumentation.PropertyFetcher`1"/> class.
+            </summary>
+            <param name="propertyName">Property name to fetch.</param>
+        </member>
+        <member name="M:OpenTelemetry.Instrumentation.PropertyFetcher`1.TryFetch(System.Object,`0@)">
+            <summary>
+            Try to fetch the property from the object.
+            </summary>
+            <param name="obj">Object to be fetched.</param>
+            <param name="value">Fetched value.</param>
+            <returns><see langword= "true"/> if the property was fetched.</returns>
+        </member>
+        <member name="T:OpenTelemetry.Internal.Guard">
+            <summary>
+            Methods for guarding against exception throwing values.
+            </summary>
+        </member>
+        <member name="M:OpenTelemetry.Internal.Guard.ThrowIfNull(System.Object,System.String)">
+            <summary>
+            Throw an exception if the value is null.
+            </summary>
+            <param name="value">The value to check.</param>
+            <param name="paramName">The parameter name to use in the thrown exception.</param>
+        </member>
+        <member name="M:OpenTelemetry.Internal.Guard.ThrowIfNullOrEmpty(System.String,System.String)">
+            <summary>
+            Throw an exception if the value is null or empty.
+            </summary>
+            <param name="value">The value to check.</param>
+            <param name="paramName">The parameter name to use in the thrown exception.</param>
+        </member>
+        <member name="M:OpenTelemetry.Internal.Guard.ThrowIfNullOrWhitespace(System.String,System.String)">
+            <summary>
+            Throw an exception if the value is null or whitespace.
+            </summary>
+            <param name="value">The value to check.</param>
+            <param name="paramName">The parameter name to use in the thrown exception.</param>
+        </member>
+        <member name="M:OpenTelemetry.Internal.Guard.ThrowIfZero(System.Int32,System.String,System.String)">
+            <summary>
+            Throw an exception if the value is zero.
+            </summary>
+            <param name="value">The value to check.</param>
+            <param name="message">The message to use in the thrown exception.</param>
+            <param name="paramName">The parameter name to use in the thrown exception.</param>
+        </member>
+        <member name="M:OpenTelemetry.Internal.Guard.ThrowIfInvalidTimeout(System.Int32,System.String)">
+            <summary>
+            Throw an exception if the value is not considered a valid timeout.
+            </summary>
+            <param name="value">The value to check.</param>
+            <param name="paramName">The parameter name to use in the thrown exception.</param>
+        </member>
+        <member name="M:OpenTelemetry.Internal.Guard.ThrowIfOutOfRange(System.Int32,System.String,System.Int32,System.Int32,System.String,System.String,System.String)">
+            <summary>
+            Throw an exception if the value is not within the given range.
+            </summary>
+            <param name="value">The value to check.</param>
+            <param name="paramName">The parameter name to use in the thrown exception.</param>
+            <param name="min">The inclusive lower bound.</param>
+            <param name="max">The inclusive upper bound.</param>
+            <param name="minName">The name of the lower bound.</param>
+            <param name="maxName">The name of the upper bound.</param>
+            <param name="message">An optional custom message to use in the thrown exception.</param>
+        </member>
+        <member name="M:OpenTelemetry.Internal.Guard.ThrowIfOutOfRange(System.Double,System.String,System.Double,System.Double,System.String,System.String,System.String)">
+            <summary>
+            Throw an exception if the value is not within the given range.
+            </summary>
+            <param name="value">The value to check.</param>
+            <param name="paramName">The parameter name to use in the thrown exception.</param>
+            <param name="min">The inclusive lower bound.</param>
+            <param name="max">The inclusive upper bound.</param>
+            <param name="minName">The name of the lower bound.</param>
+            <param name="maxName">The name of the upper bound.</param>
+            <param name="message">An optional custom message to use in the thrown exception.</param>
+        </member>
+        <member name="M:OpenTelemetry.Internal.Guard.ThrowIfNotOfType``1(System.Object,System.String)">
+            <summary>
+            Throw an exception if the value is not of the expected type.
+            </summary>
+            <param name="value">The value to check.</param>
+            <param name="paramName">The parameter name to use in the thrown exception.</param>
+            <typeparam name="T">The type attempted to convert to.</typeparam>
+            <returns>The value casted to the specified type.</returns>
+        </member>
+        <member name="T:OpenTelemetry.Trace.SemanticConventions">
+            <summary>
+            Constants for semantic attribute names outlined by the OpenTelemetry specifications.
+            <see href="https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/trace/semantic_conventions/README.md"/>.
+            </summary>
+        </member>
+        <member name="T:OpenTelemetry.Trace.TracerProviderBuilderExtensions">
+            <summary>
+            Extension methods to simplify registering of dependency instrumentation.
+            </summary>
+        </member>
+        <member name="M:OpenTelemetry.Trace.TracerProviderBuilderExtensions.AddRedisInstrumentation(OpenTelemetry.Trace.TracerProviderBuilder)">
+            <summary>
+            Enables automatic data collection of outgoing requests to Redis.
+            </summary>
+            <remarks>
+            Note: A <see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> will be resolved using the
+            application <see cref="T:System.IServiceProvider"/>.
+            </remarks>
+            <param name="builder"><see cref="T:OpenTelemetry.Trace.TracerProviderBuilder"/> being configured.</param>
+            <returns>The instance of <see cref="T:OpenTelemetry.Trace.TracerProviderBuilder"/> to chain the calls.</returns>
+        </member>
+        <member name="M:OpenTelemetry.Trace.TracerProviderBuilderExtensions.AddRedisInstrumentation(OpenTelemetry.Trace.TracerProviderBuilder,StackExchange.Redis.IConnectionMultiplexer)">
+            <summary>
+            Enables automatic data collection of outgoing requests to Redis.
+            </summary>
+            <param name="builder"><see cref="T:OpenTelemetry.Trace.TracerProviderBuilder"/> being configured.</param>
+            <param name="connection"><see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> to instrument.</param>
+            <returns>The instance of <see cref="T:OpenTelemetry.Trace.TracerProviderBuilder"/> to chain the calls.</returns>
+        </member>
+        <member name="M:OpenTelemetry.Trace.TracerProviderBuilderExtensions.AddRedisInstrumentation(OpenTelemetry.Trace.TracerProviderBuilder,System.Action{OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisInstrumentationOptions})">
+            <summary>
+            Enables automatic data collection of outgoing requests to Redis.
+            </summary>
+            <remarks>
+            Note: A <see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> will be resolved using the
+            application <see cref="T:System.IServiceProvider"/>.
+            </remarks>
+            <param name="builder"><see cref="T:OpenTelemetry.Trace.TracerProviderBuilder"/> being configured.</param>
+            <param name="configure">Callback to configure options.</param>
+            <returns>The instance of <see cref="T:OpenTelemetry.Trace.TracerProviderBuilder"/> to chain the calls.</returns>
+        </member>
+        <member name="M:OpenTelemetry.Trace.TracerProviderBuilderExtensions.AddRedisInstrumentation(OpenTelemetry.Trace.TracerProviderBuilder,StackExchange.Redis.IConnectionMultiplexer,System.Action{OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisInstrumentationOptions})">
+            <summary>
+            Enables automatic data collection of outgoing requests to Redis.
+            </summary>
+            <param name="builder"><see cref="T:OpenTelemetry.Trace.TracerProviderBuilder"/> being configured.</param>
+            <param name="connection"><see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> to instrument.</param>
+            <param name="configure">Callback to configure options.</param>
+            <returns>The instance of <see cref="T:OpenTelemetry.Trace.TracerProviderBuilder"/> to chain the calls.</returns>
+        </member>
+        <member name="M:OpenTelemetry.Trace.TracerProviderBuilderExtensions.AddRedisInstrumentation(OpenTelemetry.Trace.TracerProviderBuilder,System.String,StackExchange.Redis.IConnectionMultiplexer,System.Action{OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisInstrumentationOptions})">
+            <summary>
+            Enables automatic data collection of outgoing requests to Redis.
+            </summary>
+            <remarks>
+            Note: If an <see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> is not supplied
+            using the <paramref name="connection"/> parameter it will be
+            resolved using the application <see cref="T:System.IServiceProvider"/>.
+            </remarks>
+            <param name="builder"><see cref="T:OpenTelemetry.Trace.TracerProviderBuilder"/> being configured.</param>
+            <param name="name">Optional name which is used when retrieving options.</param>
+            <param name="connection">Optional <see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> to instrument.</param>
+            <param name="configure">Optional callback to configure options.</param>
+            <returns>The instance of <see cref="T:OpenTelemetry.Trace.TracerProviderBuilder"/> to chain the calls.</returns>
+        </member>
+        <member name="M:OpenTelemetry.Trace.TracerProviderBuilderExtensions.ConfigureRedisInstrumentation(OpenTelemetry.Trace.TracerProviderBuilder,System.Action{OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisInstrumentation})">
+            <summary>
+            Registers a callback for configuring Redis instrumentation.
+            </summary>
+            <param name="builder"><see cref="T:OpenTelemetry.Trace.TracerProviderBuilder"/> being configured.</param>
+            <param name="configure">Callback to configure instrumentation.</param>
+            <returns>The instance of <see cref="T:OpenTelemetry.Trace.TracerProviderBuilder"/> to chain the calls.</returns>
+        </member>
+        <member name="M:OpenTelemetry.Trace.TracerProviderBuilderExtensions.ConfigureRedisInstrumentation(OpenTelemetry.Trace.TracerProviderBuilder,System.Action{System.IServiceProvider,OpenTelemetry.Instrumentation.StackExchangeRedis.StackExchangeRedisInstrumentation})">
+            <summary>
+            Registers a callback for configuring Redis instrumentation.
+            </summary>
+            <param name="builder"><see cref="T:OpenTelemetry.Trace.TracerProviderBuilder"/> being configured.</param>
+            <param name="configure">Callback to configure instrumentation.</param>
+            <returns>The instance of <see cref="T:OpenTelemetry.Trace.TracerProviderBuilder"/> to chain the calls.</returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Aspire.StackExchange.Redis.OutputCaching</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.Hosting.AspireRedisOutputCacheExtensions">
+            <summary>
+            Provides extension methods for adding Redis output caching services to the <see cref="T:Microsoft.Extensions.Hosting.IHostApplicationBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Hosting.AspireRedisOutputCacheExtensions.AddRedisOutputCache(Microsoft.Extensions.Hosting.IHostApplicationBuilder,System.String,System.Action{Aspire.StackExchange.Redis.StackExchangeRedisSettings},System.Action{StackExchange.Redis.ConfigurationOptions})">
+             <summary>
+             Adds Redis output caching services in the services provided by the <paramref name="builder"/>.
+             </summary>
+             <param name="builder">The <see cref="T:Microsoft.Extensions.Hosting.IHostApplicationBuilder"/> to read config from and add services to.</param>
+             <param name="connectionName">A name used to retrieve the connection string from the ConnectionStrings configuration section.</param>
+             <param name="configureSettings">An optional method that can be used for customizing the <see cref="T:Aspire.StackExchange.Redis.StackExchangeRedisSettings"/>. It's invoked after the settings are read from the configuration.</param>
+             <param name="configureOptions">An optional method that can be used for customizing the <see cref="T:StackExchange.Redis.ConfigurationOptions"/>. It's invoked after the options are read from the configuration.</param>
+             <remarks>
+             Reads the configuration from "Aspire:StackExchange:Redis" section.
+            
+             Also registers <see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> as a singleton in the services provided by the <paramref name="builder"/>.
+             Enables retries, corresponding health check, logging, and telemetry.
+             </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Hosting.AspireRedisOutputCacheExtensions.AddKeyedRedisOutputCache(Microsoft.Extensions.Hosting.IHostApplicationBuilder,System.String,System.Action{Aspire.StackExchange.Redis.StackExchangeRedisSettings},System.Action{StackExchange.Redis.ConfigurationOptions})">
+             <summary>
+             Adds Redis output caching services for the given <paramref name="name"/> in the services provided by the <paramref name="builder"/>.
+             </summary>
+             <param name="builder">The <see cref="T:Microsoft.Extensions.Hosting.IHostApplicationBuilder"/> to read config from and add services to.</param>
+             <param name="name">The name of the component, which is used as the <see cref="P:Microsoft.Extensions.DependencyInjection.ServiceDescriptor.ServiceKey"/> of the service and also to retrieve the connection string from the ConnectionStrings configuration section.</param>
+             <param name="configureSettings">An optional method that can be used for customizing the <see cref="T:Aspire.StackExchange.Redis.StackExchangeRedisSettings"/>. It's invoked after the settings are read from the configuration.</param>
+             <param name="configureOptions">An optional method that can be used for customizing the <see cref="T:StackExchange.Redis.ConfigurationOptions"/>. It's invoked after the options are read from the configuration.</param>
+             <remarks>
+             Reads the configuration from "Aspire:StackExchange:Redis:{name}" section.
+            
+             Also registers <see cref="T:StackExchange.Redis.IConnectionMultiplexer"/> as a singleton in the services provided by the <paramref name="builder"/>.
+             Enables retries, corresponding health check, logging, and telemetry.
+             </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Hosting.AspireRedisOutputCacheExtensions.WithOutputCache(Aspire.StackExchange.Redis.AspireRedisClientBuilder)">
+            <summary>
+            Configures the Redis client to provide output caching services through <see cref="T:Microsoft.AspNetCore.OutputCaching.IOutputCacheStore"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Aspire.StackExchange.Redis.AspireRedisClientBuilder"/> to configure.</param>
+            <returns>The <see cref="T:Aspire.StackExchange.Redis.AspireRedisClientBuilder"/> for method chaining.</returns>
+        </member>
+        <member name="T:Aspire.ConfigurationSchemaAttribute">
+            <summary>
+            Attribute used to automatically generate a JSON schema for a component's configuration.
+            </summary>
+        </member>
+        <member name="P:Aspire.ConfigurationSchemaAttribute.Path">
+            <summary>
+            The path corresponding to which config section <see cref="P:Aspire.ConfigurationSchemaAttribute.Type"/> binds to.
+            </summary>
+        </member>
+        <member name="P:Aspire.ConfigurationSchemaAttribute.Type">
+            <summary>
+            The type that is bound to the configuration. This type will be walked and generate a JSON schema for all the properties.
+            </summary>
+        </member>
+        <member name="P:Aspire.ConfigurationSchemaAttribute.ExclusionPaths">
+            <summary>
+            (optional) The config sections to exclude from the ConfigurationSchema. This is useful if there are properties you don't want to publicize in the config schema.
+            </summary>
+        </member>
+        <member name="T:Aspire.LoggingCategoriesAttribute">
+            <summary>
+            Provides information to describe the logging categories produced by a component.
+            </summary>
+        </member>
+        <member name="P:Aspire.LoggingCategoriesAttribute.Categories">
+            <summary>
+            The list of log categories produced by the component. These categories will show up under the Logging:LogLevel section in appsettings.json.
+            </summary>
+        </member>
+    </members>
+</doc>

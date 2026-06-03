@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Npgsql.OpenTelemetry</name>
+    </assembly>
+    <members>
+        <member name="T:Npgsql.MeterProviderBuilderExtensions">
+            <summary>
+            Extension method for setting up Npgsql OpenTelemetry metrics.
+            </summary>
+        </member>
+        <member name="M:Npgsql.MeterProviderBuilderExtensions.AddNpgsqlInstrumentation(OpenTelemetry.Metrics.MeterProviderBuilder,System.Action{Npgsql.NpgsqlMetricsOptions})">
+            <summary>
+            Subscribes to the Npgsql metrics reporter to enable OpenTelemetry metrics.
+            </summary>
+        </member>
+        <member name="T:Npgsql.TracerProviderBuilderExtensions">
+            <summary>
+            Extension method for setting up Npgsql OpenTelemetry tracing.
+            </summary>
+        </member>
+        <member name="M:Npgsql.TracerProviderBuilderExtensions.AddNpgsql(OpenTelemetry.Trace.TracerProviderBuilder)">
+            <summary>
+            Subscribes to the Npgsql activity source to enable OpenTelemetry tracing.
+            </summary>
+        </member>
+    </members>
+</doc>
