@@ -622,6 +622,13 @@ function ProfileView({
 
   const isFriend = friendIds.has(profile.id)
   const isSent = sentIds.has(profile.id)
+  const highlights: { icon: IconName; text: string }[] = [
+    { icon: 'friends', text: `${profile.friendCount} ${profile.friendCount === 1 ? 'friend' : 'friends'}` },
+    { icon: 'photo', text: `${profile.postCount} ${profile.postCount === 1 ? 'post' : 'posts'}` },
+    ...(profile.location ? [{ icon: 'location' as const, text: `Lives in ${profile.location}` }] : []),
+    ...(profile.birthDate ? [{ icon: 'gift' as const, text: `Birthday ${new Date(profile.birthDate).toLocaleDateString()}` }] : []),
+    { icon: 'clock', text: `Joined ${new Date(profile.createdAt).toLocaleDateString()}` },
+  ]
 
   return (
     <div className="profile-view">
@@ -665,6 +672,20 @@ function ProfileView({
           </div>
         )}
       </div>
+
+      <section className="card profile-highlights" aria-label="Profile highlights">
+        <h2>Highlights</h2>
+        <ul>
+          {highlights.map((item) => (
+            <li key={item.text}>
+              <span className="highlight-icon">
+                <Icon name={item.icon} size={16} />
+              </span>
+              <span>{item.text}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
 
       {isMe && <Composer user={{ id: profile.id, username: profile.username, displayName: profile.displayName, avatarUrl: profile.avatarUrl }} onCreated={onCreated} />}
 
