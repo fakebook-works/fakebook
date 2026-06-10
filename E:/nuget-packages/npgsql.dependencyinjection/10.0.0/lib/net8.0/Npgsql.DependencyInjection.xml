@@ -1,0 +1,385 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Npgsql.DependencyInjection</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions">
+            <summary>
+            Extension method for setting up Npgsql services in an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddNpgsqlDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime,System.Object)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <param name="serviceKey">The <see cref="P:Microsoft.Extensions.DependencyInjection.ServiceDescriptor.ServiceKey"/> of the data source.</param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddNpgsqlDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{Npgsql.NpgsqlDataSourceBuilder},Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime,System.Object)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="dataSourceBuilderAction">
+            An action to configure the <see cref="T:Npgsql.NpgsqlDataSourceBuilder" /> for further customizations of the <see cref="T:Npgsql.NpgsqlDataSource" />.
+            </param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <param name="serviceKey">The <see cref="P:Microsoft.Extensions.DependencyInjection.ServiceDescriptor.ServiceKey"/> of the data source.</param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddNpgsqlDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{System.IServiceProvider,Npgsql.NpgsqlDataSourceBuilder},Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime,System.Object)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="dataSourceBuilderAction">
+            An action to configure the <see cref="T:Npgsql.NpgsqlDataSourceBuilder" /> for further customizations of the <see cref="T:Npgsql.NpgsqlDataSource" />.
+            </param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <param name="serviceKey">The <see cref="P:Microsoft.Extensions.DependencyInjection.ServiceDescriptor.ServiceKey"/> of the data source.</param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddNpgsqlSlimDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime,System.Object)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <param name="serviceKey">The <see cref="P:Microsoft.Extensions.DependencyInjection.ServiceDescriptor.ServiceKey"/> of the data source.</param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddNpgsqlSlimDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{Npgsql.NpgsqlSlimDataSourceBuilder},Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime,System.Object)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="dataSourceBuilderAction">
+            An action to configure the <see cref="T:Npgsql.NpgsqlSlimDataSourceBuilder" /> for further customizations of the <see cref="T:Npgsql.NpgsqlDataSource" />.
+            </param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <param name="serviceKey">The <see cref="P:Microsoft.Extensions.DependencyInjection.ServiceDescriptor.ServiceKey"/> of the data source.</param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddNpgsqlSlimDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{System.IServiceProvider,Npgsql.NpgsqlSlimDataSourceBuilder},Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime,System.Object)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="dataSourceBuilderAction">
+            An action to configure the <see cref="T:Npgsql.NpgsqlSlimDataSourceBuilder" /> for further customizations of the <see cref="T:Npgsql.NpgsqlDataSource" />.
+            </param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <param name="serviceKey">The <see cref="P:Microsoft.Extensions.DependencyInjection.ServiceDescriptor.ServiceKey"/> of the data source.</param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddMultiHostNpgsqlDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime,System.Object)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlMultiHostDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the
+            <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <param name="serviceKey">The <see cref="P:Microsoft.Extensions.DependencyInjection.ServiceDescriptor.ServiceKey"/> of the data source.</param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddMultiHostNpgsqlDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{Npgsql.NpgsqlDataSourceBuilder},Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime,System.Object)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlMultiHostDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="dataSourceBuilderAction">
+            An action to configure the <see cref="T:Npgsql.NpgsqlDataSourceBuilder" /> for further customizations of the <see cref="T:Npgsql.NpgsqlDataSource" />.
+            </param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <param name="serviceKey">The <see cref="P:Microsoft.Extensions.DependencyInjection.ServiceDescriptor.ServiceKey"/> of the data source.</param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddMultiHostNpgsqlDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{System.IServiceProvider,Npgsql.NpgsqlDataSourceBuilder},Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime,System.Object)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlMultiHostDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="dataSourceBuilderAction">
+            An action to configure the <see cref="T:Npgsql.NpgsqlDataSourceBuilder" /> for further customizations of the <see cref="T:Npgsql.NpgsqlDataSource" />.
+            </param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <param name="serviceKey">The <see cref="P:Microsoft.Extensions.DependencyInjection.ServiceDescriptor.ServiceKey"/> of the data source.</param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddMultiHostNpgsqlSlimDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime,System.Object)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlMultiHostDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the
+            <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <param name="serviceKey">The <see cref="P:Microsoft.Extensions.DependencyInjection.ServiceDescriptor.ServiceKey"/> of the data source.</param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddMultiHostNpgsqlSlimDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{Npgsql.NpgsqlSlimDataSourceBuilder},Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime,System.Object)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlMultiHostDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="dataSourceBuilderAction">
+            An action to configure the <see cref="T:Npgsql.NpgsqlDataSourceBuilder" /> for further customizations of the <see cref="T:Npgsql.NpgsqlDataSource" />.
+            </param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <param name="serviceKey">The <see cref="P:Microsoft.Extensions.DependencyInjection.ServiceDescriptor.ServiceKey"/> of the data source.</param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddMultiHostNpgsqlSlimDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{System.IServiceProvider,Npgsql.NpgsqlSlimDataSourceBuilder},Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime,System.Object)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlMultiHostDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="dataSourceBuilderAction">
+            An action to configure the <see cref="T:Npgsql.NpgsqlDataSourceBuilder" /> for further customizations of the <see cref="T:Npgsql.NpgsqlDataSource" />.
+            </param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <param name="serviceKey">The <see cref="P:Microsoft.Extensions.DependencyInjection.ServiceDescriptor.ServiceKey"/> of the data source.</param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddNpgsqlDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddNpgsqlDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{Npgsql.NpgsqlDataSourceBuilder},Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="dataSourceBuilderAction">
+            An action to configure the <see cref="T:Npgsql.NpgsqlDataSourceBuilder" /> for further customizations of the <see cref="T:Npgsql.NpgsqlDataSource" />.
+            </param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddNpgsqlSlimDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddNpgsqlSlimDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{Npgsql.NpgsqlSlimDataSourceBuilder},Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="dataSourceBuilderAction">
+            An action to configure the <see cref="T:Npgsql.NpgsqlSlimDataSourceBuilder" /> for further customizations of the <see cref="T:Npgsql.NpgsqlDataSource" />.
+            </param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddMultiHostNpgsqlDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlMultiHostDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the
+            <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddMultiHostNpgsqlDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{Npgsql.NpgsqlDataSourceBuilder},Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlMultiHostDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="dataSourceBuilderAction">
+            An action to configure the <see cref="T:Npgsql.NpgsqlDataSourceBuilder" /> for further customizations of the <see cref="T:Npgsql.NpgsqlDataSource" />.
+            </param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddMultiHostNpgsqlSlimDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlMultiHostDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the
+            <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.AddMultiHostNpgsqlSlimDataSource(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{Npgsql.NpgsqlSlimDataSourceBuilder},Microsoft.Extensions.DependencyInjection.ServiceLifetime,Microsoft.Extensions.DependencyInjection.ServiceLifetime)">
+            <summary>
+            Registers an <see cref="T:Npgsql.NpgsqlMultiHostDataSource" /> and an <see cref="T:Npgsql.NpgsqlConnection" /> in the
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="connectionString">An Npgsql connection string.</param>
+            <param name="dataSourceBuilderAction">
+            An action to configure the <see cref="T:Npgsql.NpgsqlDataSourceBuilder" /> for further customizations of the <see cref="T:Npgsql.NpgsqlDataSource" />.
+            </param>
+            <param name="connectionLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlConnection" /> in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />.
+            </param>
+            <param name="dataSourceLifetime">
+            The lifetime with which to register the <see cref="T:Npgsql.NpgsqlDataSource" /> service in the container.
+            Defaults to <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />.
+            </param>
+            <returns>The same service collection so that multiple calls can be chained.</returns>
+        </member>
+    </members>
+</doc>
