@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fakebook.Server\Fakebook.Server.csproj" />
+    <ProjectReference Include="..\Fakebook.UploadServer\Fakebook.UploadServer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

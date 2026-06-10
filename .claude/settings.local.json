@@ -51,7 +51,9 @@
       "Bash(curl -s -X POST http://localhost:5111/api/auth/register -H \"Content-Type: application/json\" -d '{\"username\":\"demo\",\"email\":\"demo@fakebook.local\",\"password\":\"Demo1234!\",\"displayName\":\"Demo User\"}')",
       "Bash(PGPASSWORD='admin' E:/PostgreSQL/18/bin/psql.exe *)",
       "Bash(npm run *)",
-      "Bash(dotnet ef *)"
+      "Bash(dotnet ef *)",
+      "Bash(dotnet list *)",
+      "Bash(curl -s \"https://api.nuget.org/v3-flatcontainer/opentelemetry.exporter.opentelemetryprotocol/index.json\")"
     ]
   }
 }

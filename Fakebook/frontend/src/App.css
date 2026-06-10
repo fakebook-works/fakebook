@@ -819,7 +819,8 @@ select {
 .post-media {
   background: #000;
 }
-.post-media img {
+.post-media img,
+.post-media video {
   display: block;
   width: 100%;
   max-height: 600px;
@@ -1172,9 +1173,27 @@ select {
   outline: 0;
 }
 .composer-preview {
+  position: relative;
   margin-top: 12px;
   border-radius: 8px;
   overflow: hidden;
+}
+.composer-media-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  cursor: pointer;
+}
+.composer-media-remove:hover {
+  background: rgba(0, 0, 0, 0.8);
 }
 .composer-addrow {
   display: flex;

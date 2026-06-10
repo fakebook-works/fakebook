@@ -10,6 +10,11 @@ export default defineConfig({
       '/api': {
         target: process.env.SERVER_HTTPS || process.env.SERVER_HTTP,
         changeOrigin: true
+      },
+      // Proxy file uploads / media to the upload service
+      '/media': {
+        target: process.env.UPLOADS_HTTPS || process.env.UPLOADS_HTTP,
+        changeOrigin: true
       }
     }
   }

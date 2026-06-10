@@ -95,7 +95,12 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
     if (!content && !post.imageUrl) return
     setSavingEdit(true)
     try {
-      const updated = await api.updatePost(post.id, { content, imageUrl: post.imageUrl, privacy: editPrivacy })
+      const updated = await api.updatePost(post.id, {
+        content,
+        imageUrl: post.imageUrl,
+        mediaType: post.mediaType,
+        privacy: editPrivacy,
+      })
       onChange(updated)
       setEditing(false)
     } catch {
@@ -221,7 +226,11 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
 
       {post.imageUrl && (
         <div className="post-media">
-          <img src={post.imageUrl} alt="" loading="lazy" />
+          {post.mediaType === 'video' ? (
+            <video src={post.imageUrl} controls preload="metadata" />
+          ) : (
+            <img src={post.imageUrl} alt="" loading="lazy" />
+          )}
         </div>
       )}
 
@@ -237,7 +246,11 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
           {post.originalPost.content && <p>{post.originalPost.content}</p>}
           {post.originalPost.imageUrl && (
             <div className="post-media">
-              <img src={post.originalPost.imageUrl} alt="" loading="lazy" />
+              {post.originalPost.mediaType === 'video' ? (
+                <video src={post.originalPost.imageUrl} controls preload="metadata" />
+              ) : (
+                <img src={post.originalPost.imageUrl} alt="" loading="lazy" />
+              )}
             </div>
           )}
         </div>

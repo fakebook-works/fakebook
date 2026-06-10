@@ -29,9 +29,20 @@ var server = builder.AddProject<Projects.Fakebook_Server>("server")
     .WithHttpHealthCheck("/health")
     .WithExternalHttpEndpoints();
 
+// Separate file/upload service. Validates the same JWTs the main API mints, so only
+// signed-in users can upload. Stores media on disk and serves it back under /media.
+var uploads = builder.AddProject<Projects.Fakebook_UploadServer>("uploads")
+    .WithEnvironment("JWT_ISSUER",   Environment.GetEnvironmentVariable("JWT_ISSUER")   ?? "fakebook")
+    .WithEnvironment("JWT_AUDIENCE", Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? "fakebook-clients")
+    .WithEnvironment("JWT_SECRET",   Environment.GetEnvironmentVariable("JWT_SECRET")   ?? "dev-only-secret-change-me-32-chars-minimum-xxx")
+    .WithHttpHealthCheck("/health")
+    .WithExternalHttpEndpoints();
+
 var webfrontend = builder.AddViteApp("webfrontend", "../frontend")
     .WithReference(server)
-    .WaitFor(server);
+    .WithReference(uploads)
+    .WaitFor(server)
+    .WaitFor(uploads);
 
 server.PublishWithContainerFiles(webfrontend, "wwwroot");
 

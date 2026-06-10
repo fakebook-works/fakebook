@@ -45,8 +45,8 @@ public record FriendDto(Guid FriendshipId, UserSummary User, DateTime Since);
 public record SendFriendRequest(Guid TargetUserId);
 
 // ----- Posts -----
-public record CreatePostRequest(string Content, string? ImageUrl, PostPrivacy Privacy);
-public record UpdatePostRequest(string Content, string? ImageUrl, PostPrivacy Privacy);
+public record CreatePostRequest(string Content, string? ImageUrl, string? MediaType, PostPrivacy Privacy);
+public record UpdatePostRequest(string Content, string? ImageUrl, string? MediaType, PostPrivacy Privacy);
 public record SharePostRequest(string? Message);
 
 public record PostDto(
@@ -54,6 +54,7 @@ public record PostDto(
     UserSummary Author,
     string Content,
     string? ImageUrl,
+    string? MediaType,
     PostPrivacy Privacy,
     DateTime CreatedAt,
     DateTime UpdatedAt,

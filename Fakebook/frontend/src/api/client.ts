@@ -10,6 +10,7 @@ import type {
   FriendRequestDto,
   ListingDetailDto,
   ListingDto,
+  MediaUpload,
   PostDto,
   UserProfile,
   UserSummary,
@@ -156,6 +157,7 @@ export interface LoginBody {
 export interface CreatePostBody {
   content: string
   imageUrl: string | null
+  mediaType: string | null
   privacy: number
 }
 export interface UpdateProfileBody {
@@ -183,7 +185,41 @@ export interface ListingQuery {
   take?: number
 }
 
+// Uploads go to the separate upload service at /media (not the /api group), as
+// multipart/form-data. request() can't be reused because it forces a JSON body.
+async function uploadMedia(file: File): Promise<MediaUpload> {
+  const form = new FormData()
+  form.append('file', file)
+
+  const send = (token: string | undefined) => {
+    const headers = new Headers()
+    if (token) headers.set('Authorization', `Bearer ${token}`)
+    return fetch('/media', { method: 'POST', headers, body: form })
+  }
+
+  let res = await send(getAuth()?.accessToken)
+  if (res.status === 401 && getAuth()?.refreshToken) {
+    const refreshed = await ensureRefresh()
+    if (refreshed) res = await send(refreshed.accessToken)
+  }
+
+  if (!res.ok) {
+    let message = `Upload failed (${res.status})`
+    try {
+      const body = await res.json()
+      message = body?.error ?? body?.title ?? message
+    } catch {
+      /* error body was not JSON */
+    }
+    throw new ApiError(res.status, message)
+  }
+  return (await res.json()) as MediaUpload
+}
+
 export const api = {
+  // ----- media -----
+  uploadMedia,
+
   // ----- auth -----
   register: (body: RegisterBody) =>
     request<AuthResponse>('/auth/register', { method: 'POST', body: JSON.stringify(body) }),

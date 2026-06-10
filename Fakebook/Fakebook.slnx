@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="Fakebook.AppHost/Fakebook.AppHost.csproj" />
   <Project Path="Fakebook.Server/Fakebook.Server.csproj" />
+  <Project Path="Fakebook.UploadServer/Fakebook.UploadServer.csproj" />
 </Solution>

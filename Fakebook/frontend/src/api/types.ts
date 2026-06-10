@@ -24,6 +24,15 @@ export interface UserProfile {
   postCount: number
 }
 
+// Returned by the upload service after storing a file (Fakebook.UploadServer).
+export interface MediaUpload {
+  url: string
+  type: 'image' | 'video'
+  contentType: string
+  size: number
+  name: string
+}
+
 export interface AuthResponse {
   accessToken: string
   accessTokenExpiresAt: string
@@ -37,6 +46,7 @@ export interface PostDto {
   author: UserSummary
   content: string
   imageUrl: string | null
+  mediaType: 'image' | 'video' | null
   privacy: number
   createdAt: string
   updatedAt: string

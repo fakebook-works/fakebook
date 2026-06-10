@@ -75,6 +75,10 @@ public class Post
     [MaxLength(2048)]
     public string? ImageUrl { get; set; }
 
+    // "image" | "video" — kind of media stored at ImageUrl. Null = legacy image.
+    [MaxLength(16)]
+    public string? MediaType { get; set; }
+
     public PostPrivacy Privacy { get; set; } = PostPrivacy.Public;
 
     // If this post is a share of another post, point at the original.

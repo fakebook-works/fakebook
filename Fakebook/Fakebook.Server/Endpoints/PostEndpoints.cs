@@ -21,10 +21,11 @@ public static class PostEndpoints
 
             var post = new Post
             {
-                AuthorId = me,
-                Content  = req.Content ?? "",
-                ImageUrl = req.ImageUrl,
-                Privacy  = req.Privacy
+                AuthorId  = me,
+                Content   = req.Content ?? "",
+                ImageUrl  = req.ImageUrl,
+                MediaType = req.MediaType,
+                Privacy   = req.Privacy
             };
             db.Posts.Add(post);
             db.Activities.Add(new Activity { UserId = me, Type = ActivityType.PostCreated, Summary = "Created a post", TargetPostId = post.Id });
@@ -75,6 +76,7 @@ public static class PostEndpoints
 
             post.Content   = req.Content;
             post.ImageUrl  = req.ImageUrl;
+            post.MediaType = req.MediaType;
             post.Privacy   = req.Privacy;
             post.UpdatedAt = DateTime.UtcNow;
             db.Activities.Add(new Activity { UserId = me, Type = ActivityType.PostEdited, Summary = "Edited a post", TargetPostId = post.Id });
@@ -284,6 +286,7 @@ public static class PostEndpoints
                 new UserSummary(x.Author!.Id, x.Author.Username, x.Author.DisplayName, x.Author.AvatarUrl),
                 x.Content,
                 x.ImageUrl,
+                x.MediaType,
                 x.Privacy,
                 x.CreatedAt,
                 x.UpdatedAt,

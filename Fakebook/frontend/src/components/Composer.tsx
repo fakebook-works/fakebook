@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { type ChangeEvent, useRef, useState } from 'react'
 import { api } from '../api/client'
-import type { PostDto, UserSummary } from '../api/types'
+import type { MediaUpload, PostDto, UserSummary } from '../api/types'
 import { firstName, PRIVACY } from '../lib/format'
 import { Avatar } from './Avatar'
 import { Icon } from './Icon'
@@ -13,37 +13,62 @@ interface ComposerProps {
 export function Composer({ user, onCreated }: ComposerProps) {
   const [open, setOpen] = useState(false)
   const [content, setContent] = useState('')
-  const [imageUrl, setImageUrl] = useState('')
-  const [showImageField, setShowImageField] = useState(false)
+  const [media, setMedia] = useState<MediaUpload | null>(null)
+  const [uploading, setUploading] = useState(false)
   const [privacy, setPrivacy] = useState(0)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const fileInput = useRef<HTMLInputElement>(null)
 
   function reset() {
     setContent('')
-    setImageUrl('')
-    setShowImageField(false)
+    setMedia(null)
+    setUploading(false)
     setPrivacy(0)
     setError(null)
   }
 
   function close() {
-    if (busy) return
+    if (busy || uploading) return
     setOpen(false)
     reset()
   }
 
+  function pickFile() {
+    setOpen(true)
+    fileInput.current?.click()
+  }
+
+  async function onFileChange(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    e.target.value = '' // let the same file be re-selected later
+    if (!file) return
+    setError(null)
+    setUploading(true)
+    try {
+      setMedia(await api.uploadMedia(file))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not upload that file.')
+    } finally {
+      setUploading(false)
+    }
+  }
+
   async function submit() {
     const text = content.trim()
-    const image = imageUrl.trim()
-    if (!text && !image) {
-      setError('Write something or add an image.')
+    if (!text && !media) {
+      setError('Write something or add a photo/video.')
       return
     }
     setBusy(true)
     setError(null)
     try {
-      const created = await api.createPost({ content: text, imageUrl: image || null, privacy })
+      const created = await api.createPost({
+        content: text,
+        imageUrl: media?.url ?? null,
+        mediaType: media?.type ?? null,
+        privacy,
+      })
       onCreated(created)
       setOpen(false)
       reset()
@@ -64,17 +89,11 @@ export function Composer({ user, onCreated }: ComposerProps) {
       </div>
       <div className="composer-divider" />
       <div className="composer-shortcuts">
-        <button type="button" onClick={() => setOpen(true)}>
+        <button type="button" onClick={pickFile}>
           <Icon name="video" size={22} className="ic-live" />
           <span>Live video</span>
         </button>
-        <button
-          type="button"
-          onClick={() => {
-            setShowImageField(true)
-            setOpen(true)
-          }}
-        >
+        <button type="button" onClick={pickFile}>
           <Icon name="photo" size={22} className="ic-photo" />
           <span>Photo/video</span>
         </button>
@@ -117,22 +136,25 @@ export function Composer({ user, onCreated }: ComposerProps) {
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder={`What's on your mind, ${firstName(user.displayName)}?`}
-                rows={showImageField ? 3 : 5}
+                rows={media || uploading ? 3 : 5}
                 autoFocus
               />
 
-              {showImageField && (
-                <input
-                  className="composer-image-input"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  placeholder="Paste an image URL (https://…)"
-                />
-              )}
+              <input ref={fileInput} type="file" accept="image/*,video/*" hidden onChange={onFileChange} />
 
-              {imageUrl.trim() && (
+              {uploading && <p className="muted small">Uploading…</p>}
+
+              {media && (
                 <div className="post-media composer-preview">
-                  <img src={imageUrl} alt="" />
+                  {media.type === 'video' ? <video src={media.url} controls /> : <img src={media.url} alt="" />}
+                  <button
+                    type="button"
+                    className="composer-media-remove"
+                    onClick={() => setMedia(null)}
+                    aria-label="Remove media"
+                  >
+                    <Icon name="close" size={18} />
+                  </button>
                 </div>
               )}
 
@@ -141,9 +163,10 @@ export function Composer({ user, onCreated }: ComposerProps) {
                 <div className="composer-addbtns">
                   <button
                     type="button"
-                    className={showImageField ? 'on' : ''}
-                    onClick={() => setShowImageField((v) => !v)}
-                    aria-label="Add photo"
+                    className={media ? 'on' : ''}
+                    onClick={() => fileInput.current?.click()}
+                    disabled={uploading}
+                    aria-label="Add photo or video"
                   >
                     <Icon name="photo" size={22} className="ic-photo" />
                   </button>
@@ -163,7 +186,7 @@ export function Composer({ user, onCreated }: ComposerProps) {
                 type="button"
                 className="btn-primary block"
                 onClick={submit}
-                disabled={busy || (!content.trim() && !imageUrl.trim())}
+                disabled={busy || uploading || (!content.trim() && !media)}
               >
                 {busy ? 'Posting…' : 'Post'}
               </button>
