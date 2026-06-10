@@ -15,16 +15,36 @@ public static class MediaEndpoints
             if (file is null || file.Length == 0)
                 return Results.BadRequest(new { error = "No file uploaded." });
 
-            if (!MediaTypes.Allowed.TryGetValue(file.ContentType, out var meta))
-                return Results.BadRequest(new { error = $"Unsupported type '{file.ContentType}'. Allowed: jpg, png, gif, webp, mp4, webm, mov." });
-
-            var limit = meta.Kind == "video" ? MediaTypes.MaxVideoBytes : MediaTypes.MaxImageBytes;
-            if (file.Length > limit)
-                return Results.BadRequest(new { error = $"File too large. Max {limit / 1024 / 1024} MB for {meta.Kind}s." });
+            var ext = Path.GetExtension(file.FileName);
+            if (!MediaTypes.TryGetMetaForExtension(ext, out _, out var extensionMeta))
+                return Results.BadRequest(new { error = "Unsupported file extension. Allowed: jpg, png, gif, webp, mp4, webm, mov." });
 
             await using var stream = file.OpenReadStream();
-            var name = await store.SaveAsync(stream, meta.Ext, ct);
-            return Results.Ok(new MediaUploadResult($"/media/{name}", meta.Kind, file.ContentType, file.Length, name));
+            var header = new byte[32];
+            var read = await stream.ReadAsync(header, 0, header.Length, ct);
+            if (read <= 0)
+                return Results.BadRequest(new { error = "Unable to read file header." });
+
+            if (!MediaTypes.TryDetectContentType(header.AsSpan(0, read), out var detectedContentType) ||
+                !MediaTypes.Allowed.TryGetValue(detectedContentType, out var magicMeta))
+            {
+                return Results.BadRequest(new { error = "Unsupported or invalid file signature." });
+            }
+
+            if (!string.Equals(extensionMeta.Ext, magicMeta.Ext, StringComparison.OrdinalIgnoreCase))
+            {
+                return Results.BadRequest(new { error = "File extension does not match the file content." });
+            }
+
+            var limit = magicMeta.Kind == "video" ? MediaTypes.MaxVideoBytes : MediaTypes.MaxImageBytes;
+            if (file.Length > limit)
+                return Results.BadRequest(new { error = $"File too large. Max {limit / 1024 / 1024} MB for {magicMeta.Kind}s." });
+
+            if (stream.CanSeek)
+                stream.Position = 0;
+
+            var name = await store.SaveAsync(stream, magicMeta.Ext, ct);
+            return Results.Ok(new MediaUploadResult($"/media/{name}", magicMeta.Kind, detectedContentType, file.Length, name));
         })
         .RequireAuthorization()
         .DisableAntiforgery();

@@ -43,18 +43,18 @@ export function initials(name: string): string {
   return parts.map((p) => p.charAt(0).toUpperCase()).join('') || 'F'
 }
 
-export function timeAgo(value: string): string {
+export function timeAgo(value: string, labels?: { justNow: string; minuteShort: string; hourShort: string; dayShort: string; weekShort: string }): string {
   const then = new Date(value).getTime()
   const minutes = Math.floor((Date.now() - then) / 60000)
   if (Number.isNaN(minutes)) return ''
-  if (minutes < 1) return 'Just now'
-  if (minutes < 60) return `${minutes}m`
+  if (minutes < 1) return labels?.justNow ?? 'Just now'
+  if (minutes < 60) return (labels?.minuteShort ?? '{count}m').replace('{count}', String(minutes))
   const hours = Math.floor(minutes / 60)
-  if (hours < 24) return `${hours}h`
+  if (hours < 24) return (labels?.hourShort ?? '{count}h').replace('{count}', String(hours))
   const days = Math.floor(hours / 24)
-  if (days < 7) return `${days}d`
+  if (days < 7) return (labels?.dayShort ?? '{count}d').replace('{count}', String(days))
   const weeks = Math.floor(days / 7)
-  if (weeks < 5) return `${weeks}w`
+  if (weeks < 5) return (labels?.weekShort ?? '{count}w').replace('{count}', String(weeks))
   return new Date(value).toLocaleDateString()
 }
 
@@ -68,17 +68,17 @@ export function money(n: number): string {
 
 // Human countdown for an auction end timestamp. Reads "now" each call, so a
 // component that re-renders on a timer shows a live value.
-export function timeLeft(iso: string | null): string {
+export function timeLeft(iso: string | null, labels?: { ended: string; left: string }): string {
   if (!iso) return ''
   const ms = new Date(iso).getTime() - Date.now()
-  if (ms <= 0) return 'Ended'
+  if (ms <= 0) return labels?.ended ?? 'Ended'
   const mins = Math.floor(ms / 60000)
   const days = Math.floor(mins / 1440)
   const hours = Math.floor((mins % 1440) / 60)
   const m = mins % 60
-  if (days > 0) return `${days}d ${hours}h left`
-  if (hours > 0) return `${hours}h ${m}m left`
-  return `${m}m left`
+  if (days > 0) return (labels?.left ?? '{value} left').replace('{value}', `${days}d ${hours}h`)
+  if (hours > 0) return (labels?.left ?? '{value} left').replace('{value}', `${hours}h ${m}m`)
+  return (labels?.left ?? '{value} left').replace('{value}', `${m}m`)
 }
 
 export const LISTING_CATEGORIES: { value: number; label: string }[] = [

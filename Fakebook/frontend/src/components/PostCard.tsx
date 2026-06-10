@@ -4,6 +4,7 @@ import type { CommentDto, PostDto } from '../api/types'
 import { PRIVACY, firstName, privacyMeta, reactionMeta, REACTIONS, timeAgo } from '../lib/format'
 import { Avatar } from './Avatar'
 import { Icon } from './Icon'
+import { useI18n } from '../i18n'
 
 interface PostCardProps {
   post: PostDto
@@ -15,6 +16,7 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, currentUserId, onChange, onDelete, onShared, onOpenProfile }: PostCardProps) {
+  const { t } = useI18n()
   const mine = post.author.id === currentUserId
   const my = reactionMeta(post.myReaction)
   const privacy = privacyMeta(post.privacy)
@@ -112,7 +114,7 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
 
   async function remove() {
     setMenuOpen(false)
-    if (!window.confirm('Delete this post? This cannot be undone.')) return
+    if (!window.confirm(t('deletePostConfirm'))) return
     try {
       await api.deletePost(post.id)
       onDelete(post.id)
@@ -162,7 +164,7 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
             <span>{timeAgo(post.createdAt)}</span>
             <span aria-hidden="true">·</span>
             <Icon name={privacy.icon} size={12} />
-            {post.updatedAt && post.updatedAt !== post.createdAt && <span className="edited">· Edited</span>}
+            {post.updatedAt && post.updatedAt !== post.createdAt && <span className="edited">· {t('edited')}</span>}
           </div>
         </div>
         <div className="post-menu-wrap">
@@ -170,7 +172,7 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
             <button
               type="button"
               className="icon-circle subtle"
-              aria-label="Post options"
+              aria-label={t('postOptions')}
               onClick={() => setMenuOpen((o) => !o)}
             >
               <Icon name="more" size={20} />
@@ -189,10 +191,10 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
                     setMenuOpen(false)
                   }}
                 >
-                  <Icon name="edit" size={18} /> Edit post
+                  <Icon name="edit" size={18} /> {t('editPost')}
                 </button>
                 <button type="button" className="danger" onClick={remove}>
-                  <Icon name="trash" size={18} /> Delete post
+                  <Icon name="trash" size={18} /> {t('deletePost')}
                 </button>
               </div>
             </>
@@ -213,10 +215,10 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
             </select>
             <div className="grow" />
             <button type="button" className="btn-text" onClick={() => setEditing(false)}>
-              Cancel
+              {t('cancel')}
             </button>
             <button type="button" className="btn-primary sm" onClick={saveEdit} disabled={savingEdit}>
-              Save
+              {t('save')}
             </button>
           </div>
         </div>
@@ -292,7 +294,7 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
             onClick={() => applyReaction(my ? null : 0)}
           >
             {my ? <span className="action-emoji">{my.emoji}</span> : <Icon name="like" size={20} />}
-            <span>{my ? my.label : 'Like'}</span>
+            <span>{my ? (my.type === 0 ? t('like') : my.type === 1 ? t('love') : my.type === 2 ? t('haha') : my.type === 3 ? t('wow') : my.type === 4 ? t('sad') : t('angry')) : t('like')}</span>
           </button>
           {pickerOpen && (
             <div className="reaction-picker" onMouseEnter={openPicker} onMouseLeave={closePickerSoon}>
@@ -312,19 +314,19 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
         </div>
         <button type="button" className="action-btn" onClick={toggleComments}>
           <Icon name="comment" size={20} />
-          <span>Comment</span>
+          <span>{t('commentAction')}</span>
         </button>
         <button type="button" className="action-btn" onClick={() => setSharing(true)}>
           <Icon name="share" size={20} />
-          <span>Share</span>
+          <span>{t('shareAction')}</span>
         </button>
       </div>
 
       {showComments && (
         <div className="comments">
-          {loadingComments && <p className="muted small">Loading comments…</p>}
+          {loadingComments && <p className="muted small">{t('loadingComments')}</p>}
           {commentsLoaded && comments.length === 0 && !loadingComments && (
-            <p className="muted small">No comments yet. Be the first.</p>
+            <p className="muted small">{t('noCommentsYet')}</p>
           )}
           {comments.map((c) => (
             <div className="comment" key={c.id}>
@@ -348,9 +350,9 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
                   submitComment()
                 }
               }}
-              placeholder="Write a comment…"
+              placeholder={t('writeComment')}
             />
-            <button type="button" onClick={submitComment} disabled={!commentText.trim()} aria-label="Send comment">
+            <button type="button" onClick={submitComment} disabled={!commentText.trim()} aria-label={t('sendComment')}>
               <Icon name="messenger" size={18} />
             </button>
           </div>
@@ -361,8 +363,8 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
         <div className="modal-backdrop" role="presentation" onClick={() => !shareBusy && setSharing(false)}>
           <div className="modal share-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <header className="modal-head">
-              <h2>Share post</h2>
-              <button type="button" className="icon-circle subtle" onClick={() => setSharing(false)} aria-label="Close">
+              <h2>{t('sharePost')}</h2>
+              <button type="button" className="icon-circle subtle" onClick={() => setSharing(false)} aria-label={t('cancel')}>
                 <Icon name="close" size={20} />
               </button>
             </header>
@@ -384,7 +386,7 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
             </div>
             <footer className="modal-foot">
               <button type="button" className="btn-primary block" onClick={submitShare} disabled={shareBusy}>
-                {shareBusy ? 'Sharing…' : 'Share now'}
+                {shareBusy ? t('sharing') : t('shareNow')}
               </button>
             </footer>
           </div>

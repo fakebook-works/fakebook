@@ -6,12 +6,14 @@ import { ListingStatus, ListingType } from '../api/types'
 import { Avatar } from '../components/Avatar'
 import { Icon } from '../components/Icon'
 import { categoryLabel, firstName, LISTING_CATEGORIES, money, timeAgo, timeLeft } from '../lib/format'
+import { useI18n } from '../i18n'
 
 interface MarketplacePageProps {
   onOpenProfile: (userId: string) => void
 }
 
 export function MarketplacePage({ onOpenProfile }: MarketplacePageProps) {
+  const { t } = useI18n()
   const [listings, setListings] = useState<ListingDto[]>([])
   const [loading, setLoading] = useState(true)
   const [mine, setMine] = useState(false)
@@ -61,9 +63,9 @@ export function MarketplacePage({ onOpenProfile }: MarketplacePageProps) {
   return (
     <div className="mk">
       <aside className="mk-rail">
-        <h1 className="mk-rail-title">Marketplace</h1>
+        <h1 className="mk-rail-title">{t('marketplace')}</h1>
         <button type="button" className="btn-primary block" onClick={() => setCreateOpen(true)}>
-          <Icon name="plus" size={18} /> Create new listing
+          <Icon name="plus" size={18} /> {t('createNewListing')}
         </button>
 
         <label className="mk-search">
@@ -79,18 +81,18 @@ export function MarketplacePage({ onOpenProfile }: MarketplacePageProps) {
         <nav className="mk-tabs">
           <button type="button" className={`mk-tab${!mine ? ' active' : ''}`} onClick={() => { setMine(false); setSelected(null) }}>
             <span className="rail-icon"><Icon name="marketplace" size={20} /></span>
-            Browse all
+            {t('browseAll')}
           </button>
           <button type="button" className={`mk-tab${mine ? ' active' : ''}`} onClick={() => { setMine(true); setSelected(null) }}>
             <span className="rail-icon"><Icon name="tag" size={20} /></span>
-            Your listings
+            {t('yourListings')}
           </button>
         </nav>
 
-        <h3 className="mk-rail-h">Categories</h3>
+        <h3 className="mk-rail-h">{t('categories')}</h3>
         <div className="mk-cats">
           <button type="button" className={`mk-cat${category == null ? ' active' : ''}`} onClick={() => { setCategory(null); setSelected(null) }}>
-            All categories
+            {t('allCategories')}
           </button>
           {LISTING_CATEGORIES.map((c) => (
             <button
@@ -115,7 +117,7 @@ export function MarketplacePage({ onOpenProfile }: MarketplacePageProps) {
         ) : (
           <>
             <div className="mk-head">
-              <h2>{mine ? 'Your listings' : category != null ? categoryLabel(category) : "Today's picks"}</h2>
+              <h2>{mine ? t('yourListings') : category != null ? categoryLabel(category) : t('todaysPicks')}</h2>
             </div>
             {loading ? (
               <div className="mk-grid">
@@ -164,6 +166,7 @@ export function MarketplacePage({ onOpenProfile }: MarketplacePageProps) {
 }
 
 function ListingCard({ listing, onOpen }: { listing: ListingDto; onOpen: () => void }) {
+  const { t } = useI18n()
   const isAuction = listing.type === ListingType.Auction
   const ended = listing.status === ListingStatus.Ended
   return (
@@ -174,14 +177,14 @@ function ListingCard({ listing, onOpen }: { listing: ListingDto; onOpen: () => v
         ) : (
           <span className="mk-noimg"><Icon name="marketplace" size={32} /></span>
         )}
-        {isAuction && !ended && <span className="mk-badge">Auction</span>}
-        {ended && <span className="mk-badge ended">Ended</span>}
+        {isAuction && !ended && <span className="mk-badge">{t('auction')}</span>}
+        {ended && <span className="mk-badge ended">{t('ended')}</span>}
       </div>
       <div className="mk-card-body">
         <span className="mk-price">{money(listing.currentPrice)}</span>
         <span className="mk-title">{listing.title}</span>
         <span className="mk-meta">
-          {listing.location ?? 'Local pickup'}
+          {listing.location ?? t('localPickup')}
           {isAuction && !ended && (
             <>
               <span aria-hidden="true"> · </span>
@@ -206,6 +209,7 @@ function ListingDetail({
   onBack: () => void
   onOpenProfile: (userId: string) => void
 }) {
+  const { t } = useI18n()
   const [d, setD] = useState<ListingDetailDto | null>(null)
   const [loading, setLoading] = useState(true)
   const [bid, setBid] = useState('')
@@ -370,7 +374,7 @@ function ListingDetail({
                 </div>
               </label>
               <button type="submit" className="btn-primary block" disabled={busy}>
-                {busy ? 'Placing bid…' : 'Place bid'}
+                {busy ? t('placingBid') : t('placeBid')}
               </button>
               {d.highestBidder && (
                 <p className="muted small">Highest bidder: {firstName(d.highestBidder.displayName)}</p>
@@ -379,7 +383,7 @@ function ListingDetail({
           ) : (
             <div className="mk-action">
               <button type="button" className="btn-primary block" onClick={buy} disabled={busy}>
-                {busy ? 'Processing…' : 'Buy now'}
+                {busy ? t('processing') : t('buyNow')}
               </button>
             </div>
           )}
@@ -431,6 +435,7 @@ function CreateListingModal({
   onClose: () => void
   onCreated: (created: ListingDetailDto) => void
 }) {
+  const { t } = useI18n()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [imageUrl, setImageUrl] = useState('')
@@ -448,11 +453,11 @@ function CreateListingModal({
     e.preventDefault()
     const p = Number(price)
     if (!title.trim()) {
-      setError('Give your listing a title.')
+      setError(t('listingTitleRequired'))
       return
     }
     if (!Number.isFinite(p) || p < 0) {
-      setError('Enter a valid price.')
+      setError(t('listingPriceInvalid'))
       return
     }
     setBusy(true)
@@ -470,7 +475,7 @@ function CreateListingModal({
       })
       onCreated(created)
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Could not create the listing.')
+      setError(err instanceof ApiError ? err.message : t('createListingError'))
       setBusy(false)
     }
   }
@@ -479,7 +484,7 @@ function CreateListingModal({
     <div className="modal-backdrop" role="presentation" onClick={() => !busy && onClose()}>
       <form className="modal edit-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()} onSubmit={submit}>
         <header className="modal-head">
-          <h2>Create new listing</h2>
+          <h2>{t('createListingTitle')}</h2>
           <button type="button" className="icon-circle subtle" onClick={onClose} aria-label="Close">
             <Icon name="close" size={20} />
           </button>
@@ -552,7 +557,7 @@ function CreateListingModal({
         </div>
         <footer className="modal-foot">
           <button type="submit" className="btn-primary block" disabled={busy}>
-            {busy ? 'Publishing…' : 'Publish listing'}
+            {busy ? t('publishing') : t('publishListing')}
           </button>
         </footer>
       </form>
