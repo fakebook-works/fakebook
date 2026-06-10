@@ -4,6 +4,7 @@ import type { MediaUpload, PostDto, UserSummary } from '../api/types'
 import { firstName, PRIVACY } from '../lib/format'
 import { Avatar } from './Avatar'
 import { Icon } from './Icon'
+import { useI18n } from '../i18n'
 
 interface ComposerProps {
   user: UserSummary
@@ -11,6 +12,7 @@ interface ComposerProps {
 }
 
 export function Composer({ user, onCreated }: ComposerProps) {
+  const { t } = useI18n()
   const [open, setOpen] = useState(false)
   const [content, setContent] = useState('')
   const [media, setMedia] = useState<MediaUpload | null>(null)
@@ -48,7 +50,7 @@ export function Composer({ user, onCreated }: ComposerProps) {
     try {
       setMedia(await api.uploadMedia(file))
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not upload that file.')
+      setError(err instanceof Error ? err.message : t('uploadFileError'))
     } finally {
       setUploading(false)
     }
@@ -57,7 +59,7 @@ export function Composer({ user, onCreated }: ComposerProps) {
   async function submit() {
     const text = content.trim()
     if (!text && !media) {
-      setError('Write something or add a photo/video.')
+      setError(t('composeNeedContent'))
       return
     }
     setBusy(true)
@@ -73,7 +75,7 @@ export function Composer({ user, onCreated }: ComposerProps) {
       setOpen(false)
       reset()
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not publish your post.')
+      setError(e instanceof Error ? e.message : t('publishPostError'))
     } finally {
       setBusy(false)
     }
@@ -84,22 +86,22 @@ export function Composer({ user, onCreated }: ComposerProps) {
       <div className="composer-top">
         <Avatar name={user.displayName} src={user.avatarUrl} size={40} />
         <button type="button" className="composer-trigger" onClick={() => setOpen(true)}>
-          What&apos;s on your mind, {firstName(user.displayName)}?
+          {t('composePrompt', { name: firstName(user.displayName) })}
         </button>
       </div>
       <div className="composer-divider" />
       <div className="composer-shortcuts">
         <button type="button" onClick={pickFile}>
           <Icon name="video" size={22} className="ic-live" />
-          <span>Live video</span>
+          <span>{t('liveVideo')}</span>
         </button>
         <button type="button" onClick={pickFile}>
           <Icon name="photo" size={22} className="ic-photo" />
-          <span>Photo/video</span>
+          <span>{t('photoVideo')}</span>
         </button>
         <button type="button" onClick={() => setOpen(true)}>
           <Icon name="feeling" size={22} className="ic-feeling" />
-          <span>Feeling/activity</span>
+          <span>{t('feelingActivity')}</span>
         </button>
       </div>
 
@@ -107,7 +109,7 @@ export function Composer({ user, onCreated }: ComposerProps) {
         <div className="modal-backdrop" role="presentation" onClick={close}>
           <div className="modal composer-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <header className="modal-head">
-              <h2>Create post</h2>
+              <h2>{t('createPost')}</h2>
               <button type="button" className="icon-circle subtle" onClick={close} aria-label="Close">
                 <Icon name="close" size={20} />
               </button>
@@ -142,7 +144,7 @@ export function Composer({ user, onCreated }: ComposerProps) {
 
               <input ref={fileInput} type="file" accept="image/*,video/*" hidden onChange={onFileChange} />
 
-              {uploading && <p className="muted small">Uploading…</p>}
+              {uploading && <p className="muted small">{t('uploading')}</p>}
 
               {media && (
                 <div className="post-media composer-preview">
@@ -151,7 +153,7 @@ export function Composer({ user, onCreated }: ComposerProps) {
                     type="button"
                     className="composer-media-remove"
                     onClick={() => setMedia(null)}
-                    aria-label="Remove media"
+                    aria-label={t('removeMedia')}
                   >
                     <Icon name="close" size={18} />
                   </button>
@@ -166,14 +168,14 @@ export function Composer({ user, onCreated }: ComposerProps) {
                     className={media ? 'on' : ''}
                     onClick={() => fileInput.current?.click()}
                     disabled={uploading}
-                    aria-label="Add photo or video"
+                    aria-label={t('addPhotoVideo')}
                   >
                     <Icon name="photo" size={22} className="ic-photo" />
                   </button>
-                  <button type="button" aria-label="Feeling">
+                  <button type="button" aria-label={t('feeling')}>
                     <Icon name="feeling" size={22} className="ic-feeling" />
                   </button>
-                  <button type="button" aria-label="Check in">
+                  <button type="button" aria-label={t('checkIn')}>
                     <Icon name="location" size={22} className="ic-location" />
                   </button>
                 </div>
@@ -188,7 +190,7 @@ export function Composer({ user, onCreated }: ComposerProps) {
                 onClick={submit}
                 disabled={busy || uploading || (!content.trim() && !media)}
               >
-                {busy ? 'Posting…' : 'Post'}
+                {busy ? t('posting') : t('post')}
               </button>
             </footer>
           </div>

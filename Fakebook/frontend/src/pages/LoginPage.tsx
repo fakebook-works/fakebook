@@ -2,9 +2,11 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { ApiError } from '../api/client'
 import { useAuth } from '../lib/auth'
+import { useI18n } from '../i18n'
 
 export function LoginPage() {
   const { login, register } = useAuth()
+  const { t } = useI18n()
 
   const [usernameOrEmail, setUsernameOrEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -21,8 +23,8 @@ export function LoginPage() {
     } catch (err) {
       setError(
         err instanceof ApiError && err.status === 401
-          ? 'Incorrect username/email or password.'
-          : 'Could not log in. Is the server running?',
+          ? t('loginIncorrect')
+          : t('loginServerError'),
       )
     } finally {
       setBusy(false)
@@ -34,14 +36,14 @@ export function LoginPage() {
       <div className="auth-hero">
         <div className="auth-pitch">
           <img src="/brand/fakebook-full-cropped.png" alt="Fakebook" className="auth-logo" />
-          <p>Connect with friends and the world around you on Fakebook.</p>
+          <p>{t('loginPitch')}</p>
         </div>
 
         <div className="auth-card-wrap">
           <form className="card auth-card" onSubmit={onLogin}>
             <input
               type="text"
-              placeholder="Email or username"
+              placeholder={t('loginEmailOrUsername')}
               value={usernameOrEmail}
               onChange={(e) => setUsernameOrEmail(e.target.value)}
               autoComplete="username"
@@ -49,25 +51,25 @@ export function LoginPage() {
             />
             <input
               type="password"
-              placeholder="Password"
+              placeholder={t('loginPassword')}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
             />
             {error && <p className="form-error">{error}</p>}
             <button type="submit" className="btn-primary lg" disabled={busy || !usernameOrEmail || !password}>
-              {busy ? 'Logging in…' : 'Log in'}
+              {busy ? t('loginLoggingIn') : t('loginLogIn')}
             </button>
             <a className="auth-forgot" href="#" onClick={(e) => e.preventDefault()}>
-              Forgotten password?
+              {t('forgottenPassword')}
             </a>
             <div className="auth-divider" />
             <button type="button" className="btn-create" onClick={() => setRegisterOpen(true)}>
-              Create new account
+              {t('createAccount')}
             </button>
           </form>
           <p className="auth-hint">
-            Demo account: <strong>alice</strong> / <strong>Password123!</strong>
+            {t('demoAccount', { username: 'alice', password: 'Password123!' })}
           </p>
         </div>
       </div>
@@ -84,6 +86,7 @@ function RegisterModal({
   onClose: () => void
   onRegister: (b: { username: string; email: string; password: string; displayName: string }) => Promise<void>
 }) {
+  const { t } = useI18n()
   const [displayName, setDisplayName] = useState('')
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
@@ -95,7 +98,7 @@ function RegisterModal({
     e.preventDefault()
     setError(null)
     if (password.length < 6) {
-      setError('Password must be at least 6 characters.')
+      setError(t('passwordTooShort'))
       return
     }
     setBusy(true)
@@ -109,8 +112,8 @@ function RegisterModal({
     } catch (err) {
       setError(
         err instanceof ApiError && err.status === 409
-          ? 'That username or email is already taken.'
-          : 'Could not create the account. Please try again.',
+          ? t('usernameTaken')
+          : t('createAccountError'),
       )
       setBusy(false)
     }
@@ -121,27 +124,27 @@ function RegisterModal({
       <div className="modal auth-register" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
         <header className="modal-head register-head">
           <div>
-            <h2>Sign up</h2>
-            <p>It&apos;s quick and easy.</p>
+            <h2>{t('signUp')}</h2>
+            <p>{t('signupQuickEasy')}</p>
           </div>
           <button type="button" className="icon-circle subtle" onClick={onClose} aria-label="Close">
             ✕
           </button>
         </header>
         <form className="modal-body register-form" onSubmit={submit}>
-          <input placeholder="Full name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} autoFocus />
-          <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" />
-          <input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
+          <input placeholder={t('fullName')} value={displayName} onChange={(e) => setDisplayName(e.target.value)} autoFocus />
+          <input placeholder={t('username')} value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" />
+          <input type="email" placeholder={t('emailAddress')} value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
           <input
             type="password"
-            placeholder="New password (min 6 chars)"
+            placeholder={t('newPassword')}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="new-password"
           />
           {error && <p className="form-error">{error}</p>}
           <button type="submit" className="btn-create lg" disabled={busy || !username || !email || !password}>
-            {busy ? 'Creating…' : 'Sign up'}
+            {busy ? t('creating') : t('signUp')}
           </button>
         </form>
       </div>

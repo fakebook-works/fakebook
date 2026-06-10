@@ -11,6 +11,8 @@ import { Stories } from '../components/Stories'
 import { useAuth } from '../lib/auth'
 import { firstName, timeAgo } from '../lib/format'
 import { MarketplacePage } from './MarketplacePage'
+import { languageOptions, useI18n } from '../i18n'
+import { useTheme } from '../theme'
 
 const PAGE = 20
 
@@ -18,6 +20,7 @@ type View = { type: 'feed' } | { type: 'profile'; userId: string } | { type: 'ma
 
 export function HomePage() {
   const { user, logout } = useAuth()
+  const { t } = useI18n()
   const me = user as UserSummary
 
   const [profile, setProfile] = useState<UserProfile | null>(null)
@@ -55,7 +58,7 @@ export function HomePage() {
         setIncoming(incomingRes)
         setFriends(friendsRes)
       } catch (e) {
-        if (!cancelled) setLoadError(e instanceof Error ? e.message : 'Could not load your feed.')
+        if (!cancelled) setLoadError(e instanceof Error ? e.message : t('loadFeedError'))
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -165,12 +168,12 @@ export function HomePage() {
     return (
       <div className="boot error">
         <img src="/brand/fakebook-minimal-cropped.png" alt="" />
-        <p>{loadError ?? 'Something went wrong.'}</p>
+        <p>{loadError ?? t('genericError')}</p>
         <button type="button" className="btn-primary" onClick={() => window.location.reload()}>
-          Try again
+          {t('tryAgain')}
         </button>
         <button type="button" className="btn-text" onClick={() => logout()}>
-          Log out
+          {t('logout')}
         </button>
       </div>
     )
@@ -203,8 +206,8 @@ export function HomePage() {
               <Stories me={me} friends={friends} onOpenProfile={openProfile} />
               {feed.length === 0 ? (
                 <div className="card empty-feed">
-                  <h3>Your feed is quiet</h3>
-                  <p>Share your first post, or add friends to see what they&apos;re posting.</p>
+                  <h3>{t('yourFeedQuiet')}</h3>
+                  <p>{t('feedQuietDesc')}</p>
                 </div>
               ) : (
                 feed.map((post) => (
@@ -221,7 +224,7 @@ export function HomePage() {
               )}
               {feedHasMore && (
                 <button type="button" className="btn-text load-more" onClick={loadMore} disabled={loadingMore}>
-                  {loadingMore ? 'Loading…' : 'See more posts'}
+                  {loadingMore ? t('loadingMore') : t('seeMorePosts')}
                 </button>
               )}
             </>
@@ -292,6 +295,8 @@ function TopBar({
   onOpenMarketplace: () => void
   activeView: 'feed' | 'profile' | 'marketplace'
 }) {
+  const { t, locale, setLocale } = useI18n()
+  const { theme, toggleTheme } = useTheme()
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<UserSummary[]>([])
   const [open, setOpen] = useState(false)
@@ -313,16 +318,16 @@ function TopBar({
   }, [query])
 
   const tabs: { name: IconName; label: string }[] = [
-    { name: 'home', label: 'Home' },
-    { name: 'watch', label: 'Watch' },
-    { name: 'marketplace', label: 'Marketplace' },
-    { name: 'groups', label: 'Groups' },
+    { name: 'home', label: t('home') },
+    { name: 'watch', label: t('watch') },
+    { name: 'marketplace', label: t('marketplace') },
+    { name: 'groups', label: t('groups') },
   ]
 
   return (
     <header className="topbar">
       <div className="topbar-left">
-        <button type="button" className="brand-btn" onClick={onHome} aria-label="Fakebook home">
+        <button type="button" className="brand-btn" onClick={onHome} aria-label={t('home')}>
           <img src="/brand/fakebook-minimal-cropped.png" alt="Fakebook" />
         </button>
         <div className="search-wrap">
@@ -333,14 +338,14 @@ function TopBar({
               onChange={(e) => setQuery(e.target.value)}
               onFocus={() => setOpen(true)}
               onBlur={() => window.setTimeout(() => setOpen(false), 150)}
-              placeholder="Search Fakebook"
-              aria-label="Search Fakebook"
+              placeholder={t('searchPlaceholder')}
+              aria-label={t('searchPlaceholder')}
             />
           </label>
           {open && query.trim() && (
             <div className="search-results">
               {results.length === 0 ? (
-                <p className="muted small pad">No people found.</p>
+                <p className="muted small pad">{t('noPeopleFound')}</p>
               ) : (
                 results.map((r) => {
                   const isFriend = friendIds.has(r.id)
@@ -362,7 +367,7 @@ function TopBar({
                           disabled={isSent}
                           onMouseDown={() => onAddFriend(r.id)}
                         >
-                          {isSent ? 'Sent' : 'Add'}
+                          {isSent ? t('sent') : t('add')}
                         </button>
                       )}
                     </div>
@@ -374,7 +379,7 @@ function TopBar({
         </div>
       </div>
 
-      <nav className="topbar-tabs" aria-label="Primary">
+      <nav className="topbar-tabs" aria-label={t('primaryNavLabel')}>
         {tabs.map((t) => {
           const isActive =
             (t.name === 'home' && activeView === 'feed') ||
@@ -395,6 +400,25 @@ function TopBar({
       </nav>
 
       <div className="topbar-right">
+        <label className="lang-select" aria-label={t('languageLabel')}>
+          <span>{t('languageLabel')}</span>
+          <select value={locale} onChange={(e) => setLocale(e.target.value as typeof locale)}>
+            {languageOptions.map((opt) => (
+              <option key={opt.locale} value={opt.locale}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <button
+          type="button"
+          className="icon-circle"
+          aria-label={`${t('themeLabel')}: ${theme === 'dark' ? t('themeDark') : t('themeLight')}`}
+          title={`${t('themeLabel')}: ${theme === 'dark' ? t('themeDark') : t('themeLight')}`}
+          onClick={toggleTheme}
+        >
+          <Icon name="settings" size={20} />
+        </button>
         <button type="button" className="icon-circle" aria-label="Menu">
           <Icon name="menu" size={20} />
         </button>
@@ -425,12 +449,12 @@ function TopBar({
                   <Avatar name={me.displayName} src={me.avatarUrl} size={36} />
                   <span className="acct-name">
                     <strong>{me.displayName}</strong>
-                    <small>See your profile</small>
+                    <small>{t('seeYourProfile')}</small>
                   </span>
                 </button>
                 <div className="dropdown-divider" />
                 <button type="button" className="danger" onClick={() => onLogout()}>
-                  <Icon name="logout" size={18} /> Log out
+                  <Icon name="logout" size={18} /> {t('logout')}
                 </button>
               </div>
             </>
@@ -442,16 +466,17 @@ function TopBar({
 }
 
 function LeftRail({ me, onOpenProfile, onOpenMarketplace }: { me: UserSummary; onOpenProfile: () => void; onOpenMarketplace: () => void }) {
+  const { t } = useI18n()
   const [expanded, setExpanded] = useState(false)
   const items: { icon: IconName; label: string }[] = [
-    { icon: 'friends', label: 'Friends' },
-    { icon: 'groups', label: 'Groups' },
-    { icon: 'marketplace', label: 'Marketplace' },
-    { icon: 'watch', label: 'Video' },
-    { icon: 'bookmark', label: 'Saved' },
-    { icon: 'location', label: 'Memories' },
-    { icon: 'globe', label: 'Pages' },
-    { icon: 'settings', label: 'Settings & privacy' },
+    { icon: 'friends', label: t('friends') },
+    { icon: 'groups', label: t('groups') },
+    { icon: 'marketplace', label: t('marketplace') },
+    { icon: 'watch', label: t('video') },
+    { icon: 'bookmark', label: t('saved') },
+    { icon: 'location', label: t('memories') },
+    { icon: 'globe', label: t('pages') },
+    { icon: 'settings', label: t('settingsPrivacy') },
   ]
   const shown = expanded ? items : items.slice(0, 5)
   return (
@@ -482,10 +507,10 @@ function LeftRail({ me, onOpenProfile, onOpenMarketplace }: { me: UserSummary; o
         <span className="rail-icon see-more-icon">
           <Icon name="caret" size={22} />
         </span>
-        <span>{expanded ? 'See less' : 'See more'}</span>
+        <span>{expanded ? t('seeLess') : t('seeMore')}</span>
       </button>
       <div className="rail-footer">
-        Privacy · Terms · Advertising · Ad Choices · Cookies · More · Fakebook © 2026
+        {t('footerLinks')}
       </div>
     </aside>
   )
@@ -504,11 +529,13 @@ function RightRail({
   onDecline: (r: FriendRequestDto) => void
   onOpenProfile: (id: string) => void
 }) {
+  const { t } = useI18n()
+
   return (
     <aside className="right-rail" aria-label="Friends">
       {incoming.length > 0 && (
         <section className="rail-section">
-          <h2>Friend requests</h2>
+          <h2>{t('friendRequests')}</h2>
           {incoming.map((r) => (
             <div className="request" key={r.friendshipId}>
               <Avatar name={r.user.displayName} src={r.user.avatarUrl} size={48} onClick={() => onOpenProfile(r.user.id)} />
@@ -519,10 +546,10 @@ function RightRail({
                 <span className="muted small">{timeAgo(r.createdAt)}</span>
                 <div className="request-actions">
                   <button type="button" className="btn-primary sm" onClick={() => onAccept(r)}>
-                    Confirm
+                    {t('confirm')}
                   </button>
                   <button type="button" className="btn-soft sm" onClick={() => onDecline(r)}>
-                    Delete
+                    {t('delete')}
                   </button>
                 </div>
               </div>
@@ -532,7 +559,7 @@ function RightRail({
       )}
 
       <section className="rail-section bordered">
-        <h2>Sponsored</h2>
+        <h2>{t('sponsored')}</h2>
         <button type="button" className="sponsored-ad">
           <img className="sponsored-thumb" src="https://picsum.photos/seed/fakebook-ad-merino/232/232" alt="" />
           <span className="sponsored-meta">
@@ -551,7 +578,7 @@ function RightRail({
 
       {/* Placeholder chrome: no birthday data on the user summary yet. */}
       <section className="rail-section bordered">
-        <h2>Birthdays</h2>
+        <h2>{t('birthdays')}</h2>
         <div className="birthday">
           <span className="birthday-icon">
             <Icon name="gift" size={36} />
@@ -563,9 +590,9 @@ function RightRail({
       </section>
 
       <section className="rail-section">
-        <h2>Contacts</h2>
+        <h2>{t('contacts')}</h2>
         {friends.length === 0 ? (
-          <p className="muted small">No contacts yet.</p>
+          <p className="muted small">{t('noContactsYet')}</p>
         ) : (
           friends.map((f) => (
             <button type="button" className="contact" key={f.friendshipId} onClick={() => onOpenProfile(f.user.id)}>
@@ -612,6 +639,8 @@ function ProfileView({
   onOpenProfile: (id: string) => void
   onCreated: (p: PostDto) => void
 }) {
+  const { t } = useI18n()
+
   if (loading || !profile) {
     return (
       <div className="boot inline">
@@ -632,25 +661,25 @@ function ProfileView({
           <div className="profile-headline">
             <h1>{profile.displayName}</h1>
             <p className="muted">
-              @{profile.username} · {profile.friendCount} friends · {profile.postCount} posts
+              @{profile.username} · {profile.friendCount} {t('friends')} · {profile.postCount} {t('postsLabel')}
             </p>
           </div>
           <div className="profile-cta">
             {isMe ? (
               <button type="button" className="btn-primary" onClick={onEdit}>
-                <Icon name="edit" size={16} /> Edit profile
+                <Icon name="edit" size={16} /> {t('editProfile')}
               </button>
             ) : isFriend ? (
               <button type="button" className="btn-soft" disabled>
-                <Icon name="check" size={16} /> Friends
+                <Icon name="check" size={16} /> {t('friends')}
               </button>
             ) : (
               <button type="button" className="btn-primary" disabled={isSent} onClick={() => onAddFriend(profile.id)}>
-                <Icon name="userPlus" size={16} /> {isSent ? 'Request sent' : 'Add friend'}
+                <Icon name="userPlus" size={16} /> {isSent ? t('requestSent') : t('addFriend')}
               </button>
             )}
             <button type="button" className="btn-soft" onClick={onBack}>
-              Back to feed
+              {t('backToFeed')}
             </button>
           </div>
         </div>
@@ -670,8 +699,8 @@ function ProfileView({
 
       {posts.length === 0 ? (
         <div className="card empty-feed">
-          <h3>No posts yet</h3>
-          <p>{isMe ? 'Your posts will show up here.' : `${firstName(profile.displayName)} hasn't posted anything you can see.`}</p>
+          <h3>{t('profileNoPosts')}</h3>
+          <p>{isMe ? t('yourPostsEmpty') : t('userPostsEmpty', { name: firstName(profile.displayName) })}</p>
         </div>
       ) : (
         posts.map((post) => (
@@ -700,6 +729,7 @@ function EditProfileModal({
   onSaved: (p: UserProfile) => void
 }) {
   const { setUser } = useAuth()
+  const { t } = useI18n()
   const [displayName, setDisplayName] = useState(profile.displayName)
   const [bio, setBio] = useState(profile.bio ?? '')
   const [location, setLocation] = useState(profile.location ?? '')
@@ -712,7 +742,7 @@ function EditProfileModal({
   async function submit(e: FormEvent) {
     e.preventDefault()
     if (!displayName.trim()) {
-      setError('Name cannot be empty.')
+      setError(t('nameRequired'))
       return
     }
     setBusy(true)
@@ -731,7 +761,7 @@ function EditProfileModal({
       setUser({ id: result.id, username: result.username, displayName: result.displayName, avatarUrl: result.avatarUrl })
       onSaved(result)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not save your profile.')
+      setError(err instanceof Error ? err.message : t('saveProfileError'))
       setBusy(false)
     }
   }
@@ -740,7 +770,7 @@ function EditProfileModal({
     <div className="modal-backdrop" role="presentation" onClick={() => !busy && onClose()}>
       <form className="modal edit-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()} onSubmit={submit}>
         <header className="modal-head">
-          <h2>Edit profile</h2>
+          <h2>{t('editProfileTitle')}</h2>
           <button type="button" className="icon-circle subtle" onClick={onClose} aria-label="Close">
             <Icon name="close" size={20} />
           </button>
@@ -749,42 +779,42 @@ function EditProfileModal({
           <div className="edit-avatar-row">
             <Avatar name={displayName || profile.displayName} src={avatarUrl || null} size={72} />
             <label className="field grow">
-              <span>Avatar URL</span>
+              <span>{t('avatarUrlLabel')}</span>
               <input value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder="https://…" />
             </label>
           </div>
           <label className="field">
-            <span>Name</span>
+            <span>{t('nameLabel')}</span>
             <input value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
           </label>
           <label className="field">
-            <span>Bio</span>
+            <span>{t('bioLabel')}</span>
             <textarea value={bio} onChange={(e) => setBio(e.target.value)} rows={3} />
           </label>
           <div className="field-row">
             <label className="field">
-              <span>Location</span>
+              <span>{t('locationLabel')}</span>
               <input value={location} onChange={(e) => setLocation(e.target.value)} />
             </label>
             <label className="field">
-              <span>Gender</span>
+              <span>{t('genderLabel')}</span>
               <select value={gender} onChange={(e) => setGender(e.target.value)}>
-                <option value="">Prefer not to say</option>
-                <option value="Female">Female</option>
-                <option value="Male">Male</option>
-                <option value="Custom">Custom</option>
+                <option value="">{t('genderPreferNot')}</option>
+                <option value="Female">{t('genderFemale')}</option>
+                <option value="Male">{t('genderMale')}</option>
+                <option value="Custom">{t('genderCustom')}</option>
               </select>
             </label>
           </div>
           <label className="field">
-            <span>Birth date</span>
+            <span>{t('birthDateLabel')}</span>
             <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
           </label>
           {error && <p className="form-error">{error}</p>}
         </div>
         <footer className="modal-foot">
           <button type="submit" className="btn-primary block" disabled={busy}>
-            {busy ? 'Saving…' : 'Save changes'}
+            {busy ? t('saving') : t('saveChanges')}
           </button>
         </footer>
       </form>
