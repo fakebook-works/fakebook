@@ -15,6 +15,12 @@ interface PostCardProps {
   onOpenProfile: (userId: string) => void
 }
 
+/** Content longer than this is clamped behind a "See more" toggle. */
+const LONG_CONTENT = 320
+/** Short text-only posts render with larger type, like Facebook. */
+const SHORT_TEXT = 80
+const REACTION_LABEL_KEYS = ['like', 'love', 'haha', 'wow', 'sad', 'angry'] as const
+
 export function PostCard({ post, currentUserId, onChange, onDelete, onShared, onOpenProfile }: PostCardProps) {
   const { t } = useI18n()
   const mine = post.author.id === currentUserId
@@ -33,6 +39,7 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
   const [loadingComments, setLoadingComments] = useState(false)
   const [commentText, setCommentText] = useState('')
 
+  const [expanded, setExpanded] = useState(false)
   const [pickerOpen, setPickerOpen] = useState(false)
   const [sharing, setSharing] = useState(false)
   const [shareMessage, setShareMessage] = useState('')
@@ -138,6 +145,16 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
     }
   }
 
+  const truncated = !expanded && post.content.length > LONG_CONTENT
+  const displayContent = truncated ? post.content.slice(0, LONG_CONTENT).trimEnd() : post.content
+  const shortText =
+    post.content.length > 0 &&
+    post.content.length <= SHORT_TEXT &&
+    !post.content.includes('\n') &&
+    !post.imageUrl &&
+    !post.originalPost
+  const reactionLabel = (type: number) => t(REACTION_LABEL_KEYS[type] ?? 'like')
+
   function openPicker() {
     if (pickerTimer.current) window.clearTimeout(pickerTimer.current)
     setPickerOpen(true)
@@ -223,7 +240,19 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
           </div>
         </div>
       ) : (
-        post.content && <p className="post-body">{post.content}</p>
+        post.content && (
+          <p className={`post-body${shortText ? ' large' : ''}`}>
+            {displayContent}
+            {truncated && (
+              <>
+                {'… '}
+                <button type="button" className="see-more" onClick={() => setExpanded(true)}>
+                  {t('seeMore')}
+                </button>
+              </>
+            )}
+          </p>
+        )
       )}
 
       {post.imageUrl && (
@@ -273,12 +302,12 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
           <div className="stat-right">
             {post.commentCount > 0 && (
               <button type="button" onClick={toggleComments}>
-                {post.commentCount} {post.commentCount === 1 ? 'comment' : 'comments'}
+                {post.commentCount} {post.commentCount === 1 ? t('comment') : t('comments')}
               </button>
             )}
             {post.shareCount > 0 && (
               <span>
-                {post.shareCount} {post.shareCount === 1 ? 'share' : 'shares'}
+                {post.shareCount} {post.shareCount === 1 ? t('share') : t('shares')}
               </span>
             )}
           </div>
@@ -291,10 +320,11 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
             type="button"
             className={`action-btn${my ? ' reacted' : ''}`}
             style={my ? { color: my.color } : undefined}
+            aria-pressed={my !== null}
             onClick={() => applyReaction(my ? null : 0)}
           >
             {my ? <span className="action-emoji">{my.emoji}</span> : <Icon name="like" size={20} />}
-            <span>{my ? (my.type === 0 ? t('like') : my.type === 1 ? t('love') : my.type === 2 ? t('haha') : my.type === 3 ? t('wow') : my.type === 4 ? t('sad') : t('angry')) : t('like')}</span>
+            <span>{my ? reactionLabel(my.type) : t('like')}</span>
           </button>
           {pickerOpen && (
             <div className="reaction-picker" onMouseEnter={openPicker} onMouseLeave={closePickerSoon}>
@@ -302,7 +332,7 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
                 <button
                   key={r.type}
                   type="button"
-                  title={r.label}
+                  title={reactionLabel(r.type)}
                   className="reaction-option"
                   onClick={() => applyReaction(r.type)}
                 >
@@ -372,7 +402,7 @@ export function PostCard({ post, currentUserId, onChange, onDelete, onShared, on
               <textarea
                 value={shareMessage}
                 onChange={(e) => setShareMessage(e.target.value)}
-                placeholder={`Say something about ${firstName(post.author.displayName)}'s post…`}
+                placeholder={t('saySomethingAboutPost', { name: firstName(post.author.displayName) })}
                 rows={3}
                 autoFocus
               />
